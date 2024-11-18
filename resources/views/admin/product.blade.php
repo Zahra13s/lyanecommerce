@@ -2,11 +2,28 @@
 @section('main')
     <div class="p-3">
 
-        <div class="text-end">
-            <!-- Button trigger modal -->
-            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                Add Product
-            </button>
+        <div class="row">
+            <div class="col-4 offset-8 d-flex justify-content-between">
+                <div class="">
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control" placeholder="Search"
+                            aria-label="Search" aria-describedby="basic-addon2">
+                        <div class="input-group-append">
+                            <button class="btn btn-outline-secondary" type="button">Search</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="">
+                    <div>
+                        <!-- Button trigger modal -->
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                            data-bs-target="#exampleModal">
+                            Add Product
+                        </button>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <!-- Modal -->
@@ -92,8 +109,8 @@
                                         </div>
                                         <div class="modal-body">
                                             <div class="d-flex justify-content-center">
-                                                <img src="{{ asset('products/' . $p->image) }}" class="img-thumbnail w-50"
-                                                    alt="" id="output">
+                                                <img src="{{ asset('products/' . $p->image) }}"
+                                                    class="img-thumbnail w-50" alt="" id="output">
                                             </div>
                                             <form action="{{ route('updateProduct') }}" method="POST"
                                                 enctype="multipart/form-data">
