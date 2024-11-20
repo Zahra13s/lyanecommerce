@@ -4,10 +4,10 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class OrderVarified extends Model
+class Testimonial extends Model
 {
     //
     protected $fillable = [
-'order_code','image','checked'
+        'user_id', 'testimonial', 'role'
     ];
 }

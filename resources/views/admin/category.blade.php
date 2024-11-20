@@ -2,11 +2,20 @@
 @section('main')
     <div class="p-3">
 
-        <div class="text-end">
-            <!-- Button trigger modal -->
-            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                Add Category
-            </button>
+        <div class="row">
+            <div class="col-6 offset-6 d-flex justify-content-center" >
+                <div class="pe-3">
+                    <input type="text" id="searchProduct" class="form-control" placeholder="Search Category by Name"
+                        onkeyup="searchProduct()">
+                </div>
+
+                <div class="text-end">
+                    <!-- Button trigger modal -->
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                        Add Category
+                    </button>
+                </div>
+            </div>
         </div>
 
         <!-- Modal -->
@@ -20,7 +29,7 @@
                     <div class="modal-body">
                         <form action="{{ route('addCategory') }}" method="POST">
                             @csrf
-                            <input type="text" name="category" placeholder="Add Price" class="form-control">
+                            <input type="text" name="category" placeholder="Add Category" class="form-control">
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -47,7 +56,6 @@
                         <th scope="row">{{ ++$i }}</th>
                         <td>{{ $category->category }}</td>
                         <td>{{ $categoryProductCounts[$category->id] ?? 0 }}</td>
-                        <!-- Use the counts prepared in the controller -->
                         <td>
                             <button type="button" class="btn btn-primary" data-bs-toggle="modal"
                                 data-bs-target="#editCategory-{{ $category->id }}">
@@ -60,7 +68,7 @@
                                 <div class="modal-dialog">
                                     <div class="modal-content">
                                         <div class="modal-header">
-                                            <h5 class="modal-title" id="exampleModalLabel">Add Category</h5>
+                                            <h5 class="modal-title" id="exampleModalLabel">Edit Category</h5>
                                             <button type="button" class="btn-close" data-bs-dismiss="modal"
                                                 aria-label="Close"></button>
                                         </div>
@@ -68,7 +76,7 @@
                                             <form action="{{ route('updateCategory') }}" method="POST">
                                                 @csrf
                                                 <input type="hidden" value="{{ $category->id }}" name="id">
-                                                <input type="text" name="category" placeholder="Add Cateogry Name"
+                                                <input type="text" name="category" placeholder="Edit Category Name"
                                                     class="form-control" value="{{ $category->category }}">
                                         </div>
                                         <div class="modal-footer">
@@ -89,17 +97,27 @@
             {{ $data->links('pagination::bootstrap-5') }}
         </div>
     </div>
+
     <script>
-document.getElementById("delete").addEventListener('click', (event) => {
-    // Find the <i> tag inside the clicked button
-    const iconElement = event.target.closest('button').querySelector('i');
+        function searchProduct() {
+            // Get the value of the search input field
+            const searchQuery = document.getElementById('searchProduct').value.toLowerCase();
 
-    // Get the data-id attribute from the <i> tag
-    const dataId = document.getElementById("trash").getAttribute('data-id')
+            // Get all category rows in the table
+            const categoryRows = document.querySelectorAll('#userTableBody .user-row');
 
-    // Alert the data-id value
-    alert(dataId);
-});
+            // Loop through each category row
+            categoryRows.forEach(row => {
+                // Get the category name from the current row (second column)
+                const categoryName = row.querySelector('td:nth-child(2)').textContent.toLowerCase();
 
+                // If the category name contains the search query, display the row, otherwise hide it
+                if (categoryName.includes(searchQuery)) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        }
     </script>
 @endsection

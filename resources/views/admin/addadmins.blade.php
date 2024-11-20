@@ -4,6 +4,14 @@
     <div class="main">
         <main class="content">
 
+            <!-- Search Bar -->
+            <div class="row mb-3">
+                <div class="col-md-4 offset-8">
+                    <input type="text" id="searchUser" class="form-control" placeholder="Search User by Name or Email"
+                        onkeyup="searchUser()">
+                </div>
+            </div>
+
             <!-- Filter Options -->
             <div class="filter-options text-end shadow-sm">
                 <button class="btn filter-btn" data-role="all">All</button>
@@ -32,9 +40,9 @@
                                 <td>{{ $u->email }}</td>
                                 <td>{{ $u->role }}</td>
                                 <td>
-                                    <button class="changeRoleButton btn" data-user-id="{{ $u->id }}"
+                                    <button class="changeRoleButton btn btn-primary" data-user-id="{{ $u->id }}"
                                         role="{{ $u->role }}">
-                                        <i data-feather="repeat"></i>
+                                        {{ $u->role === 'admin' ? 'Switch to User' : 'Switch to Admin' }}
                                     </button>
                                 </td>
                             </tr>
@@ -42,6 +50,12 @@
                     @endforeach
                 </tbody>
             </table>
+
+            <div class="d-flex justify-content-center">
+                {{ $user->links('pagination::bootstrap-5') }}
+            </div>
+
+
             <!-- Pagination Links -->
             <div class="d-flex justify-content-center">
                 {{ $user->links('pagination::bootstrap-5') }}
@@ -57,7 +71,6 @@
             $('.changeRoleButton').on('click', function() {
                 const userId = $(this).data('user-id');
                 const currentRole = $(this).attr('role');
-
                 const newRole = currentRole === 'admin' ? 'user' : 'admin';
 
                 $.ajax({
@@ -66,23 +79,25 @@
                     data: {
                         user_id: userId,
                         role: newRole,
-                        _token: '{{ csrf_token() }}'
+                        _token: '{{ csrf_token() }}',
                     },
                     success: function(response) {
-                        $(`button[data-user-id="${userId}"]`).attr('role', newRole);
-                        alert('Role updated successfully!');
+                        const button = $(`button[data-user-id="${userId}"]`);
+                        button.attr('role', newRole);
+                        location.reload();
                     },
                     error: function(xhr) {
-                        alert('Failed to update role: ' + xhr.responseText);
-                    }
+                        const response = JSON.parse(xhr.responseText);
+                        alert(`Error: ${response.message || 'Unexpected error occurred'}`);
+                    },
+
                 });
             });
 
+            // Filter functionality
             $('.filter-btn').on('click', function() {
                 const role = $(this).data('role');
-
                 $('.filter-btn').removeClass('active');
-
                 $(this).addClass('active');
 
                 if (role === 'all') {
@@ -93,5 +108,22 @@
                 }
             });
         });
+
+        // Search functionality
+        function searchUser() {
+            const searchQuery = document.getElementById('searchUser').value.toLowerCase();
+            const userRows = document.querySelectorAll('#userTableBody .user-row');
+
+            userRows.forEach(row => {
+                const userName = row.querySelector('td:nth-child(2)').textContent.toLowerCase();
+                const userEmail = row.querySelector('td:nth-child(3)').textContent.toLowerCase();
+
+                if (userName.includes(searchQuery) || userEmail.includes(searchQuery)) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        }
     </script>
 @endsection

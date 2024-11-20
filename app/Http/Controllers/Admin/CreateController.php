@@ -67,7 +67,7 @@ class CreateController extends Controller
     public function addBlog(Request $request)
     {
         $validated = $request->validate([
-            'images.*' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048', // Validate multiple images
+            'images.*' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
             'title' => 'required|string|max:255',
             'text' => 'nullable|string|max:1000',
         ]);
@@ -86,6 +86,7 @@ class CreateController extends Controller
             'title' => $validated['title'],
             'text' => $validated['text'],
             'image' => json_encode($imagePaths),
+            'author_name' => auth()->user()->name
         ]);
         return back()->with('success', 'Blog post created successfully!');
     }

@@ -61,4 +61,8 @@ class RedirectController extends Controller
             $blogs = Blog::all();
             return view('admin.blogs', compact('blogs'));
         }
+
+        public function profilePage(){
+            return view('admin.profile');
+        }
 }

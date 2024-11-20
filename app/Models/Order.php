@@ -8,6 +8,12 @@ class Order extends Model
 {
     //
     protected $fillable =[
-        'cart_id', 'price', 'order_code','order_confirm'
+        'user_id',
+        'product_id',
+        'price',
+        'qty',
+        'sub_total',
+        'price',
+        'order_code'
     ];
 }

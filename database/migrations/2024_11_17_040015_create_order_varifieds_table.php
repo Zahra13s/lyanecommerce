@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('order_varifieds', function (Blueprint $table) {
             $table->id();
             $table->string('order_code');
-            $table->string('iamge');
+            $table->string('image');
             $table->string('checked')->nullable();
             $table->timestamps();
         });

@@ -354,7 +354,7 @@
                             <div class="post-content-entry">
                                 <h3><a href="#">{{ $b->title }}</a></h3>
                                 <div class="meta">
-                                    <span>by <a href="#">Kristin Watson</a></span> <span>on <a
+                                    <span>by <a href="#">{{$b->author_name}}</a></span> <span>on <a
                                             href="#">{{ $b->updated_at->format('M d, Y') }}</a></span>
                                 </div>
                             </div>

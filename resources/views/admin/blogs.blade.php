@@ -5,7 +5,7 @@
         <div class="text-end">
             <!-- Button trigger modal -->
             <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                Add Product
+                Add Blogs
             </button>
         </div>
 
@@ -22,9 +22,10 @@
                             @csrf
                             <div class="d-flex flex-column align-items-center">
                                 <h6>Choose Images</h6>
+                                <img src="{{ asset('deafult/product_default.jpg') }}" class="img-thumbnail w-50 sample"
+                                    alt="" style="display: block;">
                                 <div class="d-flex flex-wrap justify-content-center" id="imagePreviewContainer">
-                                    <img src="{{ asset('default/product_default.jpg') }}" class="img-thumbnail w-50"
-                                        alt="">
+
                                 </div>
                             </div>
 
@@ -49,22 +50,14 @@
             </div>
         </div>
 
-        <table class="table mb-5">
-            <thead>
-                <tr>
-                    <th class="col">#</th>
-                    <th class="col-2">Image</th>
-                    <th class="col">Title</th>
-                    <th class="col">Texts</th>
-                </tr>
-            </thead>
-            <tbody id="userTableBody">
-                <?php $i = 0; ?>
+        <div class="container">
+
+            <div class="row">
                 @foreach ($blogs as $b)
-                    <tr class="user-row">
-                        <th scope="row">{{ ++$i }}</th>
-                        <td>
-                            <div class="d-flex flex-column" id="imageContainer">
+                <div class="col-12 col-sm-6 col-md-4 mb-4 mb-md-0">
+                    <div class="post-entry card p-3 rounded-3">
+                        <a href="#" class="post-thumbnail">
+                            <div class="d-flex flex-wrap" id="imageContainer">
 
                             </div>
                             <script>
@@ -81,27 +74,38 @@
                                     console.log(images[i]);
 
                                     let img = document.createElement("img");
-                                    img.style.width = "50%"
-                                    img.style.marginTop = "15px"
+                                    img.style.width = "25%"
+                                    img.style.aspectRatio = "1 / 1";
+                                    img.style.margin = "10px"
                                     img.src = basePath + images[i]; // Concatenate base path with the image name
                                     container.appendChild(img);
                                 }
                             </script>
+                        </a>
+                        <div card-body class="post-content-entry p-3">
+                            <h2><a href="#">{{ $b->title }}</a></h2>
+                            <p class="card-text">
+                                {{ Str::words($b->text, 25, '...') }}
+                            </p>
+                            <div class="meta">
+                                <span>by <a href="#">{{$b->author_name}}</a></span> <span>on <a
+                                        href="#">{{ $b->updated_at->format('M d, Y') }}</a></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            @endforeach
 
-                        </td>
-                        <td>{{ $b->title }}</td>
-                        <td>{{ $b->text }}</td>
-                    </tr>
-                @endforeach
-            </tbody>
+            </div>
+        </div>
 
-        </table>
     </div>
 
     <script>
         function loadFiles(event) {
             const imagePreviewContainer = document.getElementById('imagePreviewContainer');
             const files = event.target.files; // Get the selected files
+            document.querySelector(".sample").style.display = 'none'
 
             // Loop through each selected file
             for (let i = 0; i < files.length; i++) {

@@ -1,30 +1,20 @@
 @extends('admin.layout.master')
 @section('main')
     <div class="p-3">
-
         <div class="row">
-            <div class="col-4 offset-8 d-flex justify-content-between">
-                <div class="">
-                    <div class="input-group mb-3">
-                        <input type="text" class="form-control" placeholder="Search"
-                            aria-label="Search" aria-describedby="basic-addon2">
-                        <div class="input-group-append">
-                            <button class="btn btn-outline-secondary" type="button">Search</button>
-                        </div>
-                    </div>
+            <div class="col-6 offset-6 d-flex justify-content-end">
+                <div class="pe-3">
+                    <input type="text" id="searchInput" class="form-control" placeholder="Search by product name...">
                 </div>
-
-                <div class="">
-                    <div>
-                        <!-- Button trigger modal -->
-                        <button type="button" class="btn btn-primary" data-bs-toggle="modal"
-                            data-bs-target="#exampleModal">
-                            Add Product
-                        </button>
-                    </div>
+                <div class="text-end">
+                    <!-- Button trigger modal -->
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                        Add Product
+                    </button>
                 </div>
             </div>
         </div>
+
 
         <!-- Modal -->
         <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -70,8 +60,8 @@
                     <th class="col">Name</th>
                     <th class="col">Category</th>
                     <th class="col-4">Description</th>
-                    <th class="col">Edit</th>
-                    <th class="col">Delete</th>
+                    <th class="col text-center">Edit</th>
+                    <th class="col text-center">Delete</th>
                 </tr>
             </thead>
             <tbody id="userTableBody">
@@ -91,7 +81,7 @@
                         <td>{{ $p->name }}</td>
                         <td>{{ $p->category }}</td>
                         <td>{{ $p->description }}</td>
-                        <td>
+                        <td >
                             <button type="button" class="btn btn-primary" data-bs-toggle="modal"
                                 data-bs-target="#editProduct-{{ $p->id }}">
                                 <i data-id="{{ $p->id }}" data-feather="edit"></i>
@@ -161,4 +151,22 @@
             {{ $product->links('pagination::bootstrap-5') }}
         </div>
     </div>
+
+    <script>
+        // Function to filter products based on name
+        document.getElementById('searchInput').addEventListener('input', function() {
+            let searchTerm = this.value.toLowerCase(); // Get search term
+            let tableRows = document.querySelectorAll('#userTableBody .user-row'); // Get all product rows
+
+            tableRows.forEach(function(row) {
+                let productName = row.querySelector('td:nth-child(3)').textContent
+                    .toLowerCase(); // Get the product name from the third column (adjust index if needed)
+                if (productName.includes(searchTerm)) {
+                    row.style.display = ''; // Show the row if it matches the search term
+                } else {
+                    row.style.display = 'none'; // Hide the row if it doesn't match
+                }
+            });
+        });
+    </script>
 @endsection

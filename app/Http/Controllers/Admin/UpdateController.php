@@ -11,19 +11,24 @@ use App\Http\Controllers\Controller;
 
 class UpdateController extends Controller
 {
-      //update
-      public function updateRole(Request $request) {
-        $user = User::find($request->user_id);
+    public function updateRole(Request $request) {
+        $request->validate([
+            'user_id' => 'required|exists:users,id',
+            'role' => 'required|in:user,admin', // Ensure valid roles
+        ]);
 
+        $user = User::find($request->user_id);
         if ($user) {
             $user->role = $request->role;
             $user->save();
 
             return response()->json(['success' => true, 'message' => 'Role updated successfully.']);
         } else {
+            \Log::error('User not found for role update', ['user_id' => $request->user_id]);
             return response()->json(['success' => false, 'message' => 'User not found.'], 404);
         }
     }
+
 
     public function updatePrice(Request $request){
         $price = Price::find($request->id);
