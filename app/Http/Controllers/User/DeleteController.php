@@ -11,7 +11,6 @@ class DeleteController extends Controller
     //
     public function delete($id)
     {
-        // Remove dd($id) after testing
         $cart = Cart::find($id);
         if ($cart) {
             $cart->delete();

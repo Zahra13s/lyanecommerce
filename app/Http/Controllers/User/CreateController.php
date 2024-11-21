@@ -50,24 +50,22 @@ class CreateController extends Controller
         ]);
 
         $userId = $request->user()->id;
-
-        // Fetch cart items
         $cartItems = DB::table('carts')->where('user_id', $userId)->get();
 
         if ($cartItems->isEmpty()) {
-            return response()->json(['message' => 'Cart is empty'], 400);
+            return back()->with('error', 'Your cart is empty!');
         }
 
-        // Generate unique order code
         $orderCode = Str::uuid();
 
-        // Handle image upload
         $imagePath = null;
         if ($request->hasFile('image')) {
-            $imagePath = $request->file('image')->store('order_varified', 'public'); // Save image in 'storage/app/public/order_varified'
+            $image = $request->file('image');
+            $imageName = time() . '_' . $image->getClientOriginalName();
+            $image->move(public_path('products'), $imageName);
+            $imagePath = 'products/' . $imageName;
         }
 
-        // Insert order details
         foreach ($cartItems as $item) {
             DB::table('orders')->insert([
                 'user_id'    => $userId,
@@ -79,21 +77,16 @@ class CreateController extends Controller
             ]);
         }
 
-        // Insert verification details
         DB::table('order_varifieds')->insert([
             'order_code' => $orderCode,
-            'image'      => $imagePath, // Save relative path
+            'image'      => $imagePath,
         ]);
 
-        // Clear user's cart
         DB::table('carts')->where('user_id', $userId)->delete();
 
-        return response()->json([
-            'message' => 'Order placed successfully',
-            'order_code' => $orderCode,
-            'image_url' => asset('storage/' . $imagePath), // Return full URL to image
-        ]);
+        return back()->with('success', 'Order placed successfully!');
     }
+
 
 
 

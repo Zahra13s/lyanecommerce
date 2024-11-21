@@ -5,8 +5,6 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Blog;
 use App\Models\Category;
-use App\Models\Order;
-use App\Models\OrderVarified;
 use App\Models\Price;
 use App\Models\Product;
 use App\Models\User;
@@ -72,15 +70,47 @@ class RedirectController extends Controller
     public function ordersReply()
     {
         $orderDisplay = DB::table('order_varifieds')
-    ->select('order_varifieds.id', 'order_varifieds.order_code', 'users.username')
-    ->join('orders', 'order_varifieds.order_code', 'orders.order_code')
-    ->join('users', 'orders.user_id', 'users.id')
-    ->groupBy('order_varifieds.id', 'order_varifieds.order_code', 'users.username')
-    ->get();
+            ->select('order_varifieds.id', 'order_varifieds.order_code', 'users.username')
+            ->join('orders', 'order_varifieds.order_code', 'orders.order_code')
+            ->join('users', 'orders.user_id', 'users.id')
+            ->groupBy('order_varifieds.id', 'order_varifieds.order_code', 'users.username')
+            ->get();
 
-        $orders = Order::select("orders.*", "order_varifieds.order_code", "order_varifieds.image", "order_varifieds.checked")
-                  ->leftJoin("order_varifieds", "orders.order_code", "order_varifieds.order_code")
-                  ->get();
-        return view('admin.ordersReply', compact('orderDisplay', 'orders'));
+        return view('admin.ordersReply', compact('orderDisplay'));
     }
+
+
+    public function orderDetails($order_code)
+    {
+        $orders = DB::table('orders')
+            ->select(
+                'orders.order_code',
+                'users.username',
+                'users.email',
+                'products.name as product_name',
+                'products.image as product_image',
+                'products.price as product_price',
+                'products.description as product_description',
+                'orders.qty',
+                'orders.sub_total',
+                'orders.price as order_price',
+                'order_varifieds.image as order_image',
+                'categories.category as product_category'
+            )
+            ->join('users', 'orders.user_id', '=', 'users.id')
+            ->join('products', 'orders.product_id', '=', 'products.id')
+            ->join('order_varifieds', 'orders.order_code', '=', 'order_varifieds.order_code')
+            ->join('categories', 'products.category_id', '=', 'categories.id')
+            ->where('orders.order_code', $order_code)
+            ->get();
+
+        $ov_image = DB::table('order_varifieds')
+            ->select('image')
+            ->where('order_code', $order_code)
+            ->first();
+
+        return view('admin.ordersDetails', compact('ov_image', 'orders'));
+    }
+
+
 }

@@ -11,7 +11,7 @@ use App\Http\Controllers\Controller;
 
 class CreateController extends Controller
 {
-    //create
+    //price create
     public function addPrice(Request $request)
     {
         $validated = $request->validate([
@@ -24,6 +24,7 @@ class CreateController extends Controller
         return back();
     }
 
+    //category create
     public function addCategory(Request $request)
     {
         $validated = $request->validate([
@@ -36,6 +37,7 @@ class CreateController extends Controller
         return back();
     }
 
+    //product create
     public function addProduct(Request $request)
     {
         $price = Price::latest()->first();
@@ -64,6 +66,7 @@ class CreateController extends Controller
         return back();
     }
 
+    //blog create
     public function addBlog(Request $request)
     {
         $validated = $request->validate([

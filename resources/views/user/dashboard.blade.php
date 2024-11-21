@@ -326,30 +326,9 @@
                     <div class="col-12 col-sm-6 col-md-4 mb-4 mb-md-0">
                         <div class="post-entry">
                             <a href="#" class="post-thumbnail">
-                                <div class="d-flex flex-wrap" id="imageContainer">
+                                <div class="d-flex flex-wrap" id="imageContainer-{{ $b->id }}">
 
                                 </div>
-                                <script>
-                                    let images = {!! json_encode($b->image) !!};
-                                    images = JSON.parse(images);
-
-                                    // Assuming there's a container div in your HTML with the ID "imageContainer"
-                                    const container = document.getElementById("imageContainer");
-
-                                    // Set the base path for images using Laravel's asset function
-                                    const basePath = "{{ asset('blogs') }}/";
-
-                                    for (let i = 0; i < images.length; i++) {
-                                        console.log(images[i]);
-
-                                        let img = document.createElement("img");
-                                        img.style.width = "50%"
-                                        img.style.aspectRatio = "1 / 1";
-                                        img.style.marginTop = "15px"
-                                        img.src = basePath + images[i]; // Concatenate base path with the image name
-                                        container.appendChild(img);
-                                    }
-                                </script>
                             </a>
                             <div class="post-content-entry">
                                 <h3><a href="#">{{ $b->title }}</a></h3>
@@ -361,6 +340,28 @@
                         </div>
                     </div>
                 @endforeach
+                <script>
+                    document.addEventListener("DOMContentLoaded", () => {
+                        const blogs = @json($blogs);
+
+                        blogs.forEach(blog => {
+                            const images = JSON.parse(blog.image || "[]");
+                            const container = document.getElementById(`imageContainer-${blog.id}`);
+                            const basePath = "{{ asset('blogs') }}/";
+
+                            if (container && images.length) {
+                                images.forEach(image => {
+                                    const img = document.createElement("img");
+                                    img.style.width = "45%";
+                                    img.style.aspectRatio = "1 / 1";
+                                    img.style.margin = "2px";
+                                    img.src = basePath + image;
+                                    container.appendChild(img);
+                                });
+                            }
+                        });
+                    });
+                </script>
             </div>
         </div>
     </div>
