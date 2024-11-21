@@ -97,7 +97,7 @@
                     <p>{{ $blog->text }}</p>
 
                     <div class="row">
-                        <form action="{{ route('addComment') }}" method="POST">
+                        <form action="{{ route('createComment') }}" method="POST">
                             @csrf
                             <div class="col d-flex px-2">
                                 <input type="hidden" value="{{ $blog->id }}" name="blog_id">

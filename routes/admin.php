@@ -27,6 +27,7 @@ Route::middleware('admin')->prefix('admin')->group(function () {
     Route::post('update/price', [UpdateController::class, 'updatePrice'])->name('updatePrice');
     Route::post('update/category', [UpdateController::class, 'updateCategory'])->name('updateCategory');
     Route::post('update/product', [UpdateController::class, 'updateProduct'])->name('updateProduct');
+    Route::post('/profile/update', [UpdateController::class, 'updateProfile'])->name('updateProfile');
 
 
     Route::delete('/product/{id}', [DeleteController::class, 'deleteProduct'])->name('deleteProduct');

@@ -63,12 +63,12 @@
                             </a>
                             <div card-body class="post-content-entry p-3">
                                 <div class="d-flex justiy-content-end bg-danger  my-2">
-                                   <form action="{{route('addFavourite')}}" method="post">
+                                   <form action="{{route('createFavourite')}}" method="post">
                                     @csrf
                                     <input type="hidden" name="blog_id" value="{{$b -> id}}">
                                     <button type="submit"  style="background-color: transparent; border:none;"> <i data-feather="heart" class="me-2"></i></button>
                                    </form>
-                                   <form action="{{route('addSave')}}" method="post">
+                                   <form action="{{route('createSave')}}" method="post">
                                     @csrf
                                     <input type="hidden" name="blog_id" value="{{$b -> id}}">
                                     <button type="submit" style="background-color: transparent; border:none;"> <i data-feather="save" class="me-2"></i></button>

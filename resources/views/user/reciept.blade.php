@@ -77,7 +77,6 @@
 
                                 <form action="{{ route('placeOrder') }}" method="POST" enctype="multipart/form-data">
                                     @csrf
-                                    <input type="hidden" name="cart_code" value="{{ $cart_items->first()->cart_code }}">
                                     <input type="hidden" name="total_price" value="{{ $total }}">
                                     <div class="border p-3 mb-3">
                                         <label for="image">Upload Image</label>

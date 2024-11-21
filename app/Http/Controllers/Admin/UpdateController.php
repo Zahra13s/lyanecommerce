@@ -7,10 +7,53 @@ use App\Models\Price;
 use App\Models\Product;
 use App\Models\Category;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 
 class UpdateController extends Controller
 {
+
+    public function updateProfile(Request $request)
+    {
+        $request->validate([
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'phone_no' => 'nullable|string|max:15',
+            'address' => 'nullable|string|max:255',
+        ]);
+
+        $user = Auth::user();
+
+        if ($request->hasFile('image')) {
+            $file = $request->file('image');
+            $filename = time() . '_' . $file->getClientOriginalName();
+            $file->move(public_path('uploads/profile_images'), $filename);
+
+            if ($user->image) {
+                $oldImagePath = public_path('uploads/profile_images/' . $user->image);
+                if (file_exists($oldImagePath)) {
+                    unlink($oldImagePath);
+                }
+            }
+
+            $user->image = $filename;
+        }
+
+        // Debug phone_no and address before saving
+        logger('Phone No: ' . $request->phone_no);
+        logger('Address: ' . $request->address);
+
+        $user->phone_no = $request->phone_no;
+        $user->address = $request->address;
+
+        $user->save();
+
+        logger('User updated: ', $user->toArray());
+
+        return back()->with('success', 'Profile updated successfully!');
+    }
+
+
     public function updateRole(Request $request) {
         $request->validate([
             'user_id' => 'required|exists:users,id',
