@@ -104,8 +104,8 @@
                         Order Management
                     </li>
 
-                    <li class="sidebar-item {{ request()->routeIs('blogsPage') ? 'active' : '' }}">
-                        <a class="sidebar-link" href="{{ route('blogsPage') }}">
+                    <li class="sidebar-item {{ request()->routeIs('ordersReply') ? 'active' : '' }}">
+                        <a class="sidebar-link" href="{{ route('ordersReply') }}">
                             <i class="align-middle" data-feather="shopping-bag"></i> <span class="align-middle">
                                 Orders
                             </span>

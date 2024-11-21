@@ -53,48 +53,52 @@
         <div class="container">
 
             <div class="row">
-                @foreach ($blogs as $b)
-                <div class="col-12 col-sm-6 col-md-4 mb-4 mb-md-0">
-                    <div class="post-entry card p-3 rounded-3">
-                        <a href="#" class="post-thumbnail">
-                            <div class="d-flex flex-wrap" id="imageContainer">
+                <script>
+                    let images, container, basePath, img;
+                </script>
+              @foreach ($blogs as $b)
+              <div class="col-12 col-sm-6 col-md-4 mb-4 mb-md-0">
+                  <div class="post-entry card p-3 rounded-3">
+                      <a href="#" class="post-thumbnail">
+                          <div class="d-flex flex-wrap" id="imageContainer-{{ $b->id }}"></div>
+                      </a>
+                      <div class="card-body post-content-entry p-3">
+                          <h2><a href="#">{{ $b->title }}</a></h2>
+                          <p class="card-text">
+                              {{ Str::words($b->text, 25, '...') }}
+                          </p>
+                          <div class="meta">
+                              <span>by <a href="#">{{$b->author_name}}</a></span>
+                              <span>on <a href="#">{{ $b->updated_at->format('M d, Y') }}</a></span>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+              @endforeach
 
-                            </div>
-                            <script>
-                                let images = {!! json_encode($b->image) !!};
-                                images = JSON.parse(images);
+              <script>
+                  document.addEventListener("DOMContentLoaded", () => {
+                      const blogs = @json($blogs);
 
-                                // Assuming there's a container div in your HTML with the ID "imageContainer"
-                                const container = document.getElementById("imageContainer");
+                      blogs.forEach(blog => {
+                          const images = JSON.parse(blog.image || "[]");
+                          const container = document.getElementById(`imageContainer-${blog.id}`);
+                          const basePath = "{{ asset('blogs') }}/";
 
-                                // Set the base path for images using Laravel's asset function
-                                const basePath = "{{ asset('blogs') }}/";
+                          if (container && images.length) {
+                              images.forEach(image => {
+                                  const img = document.createElement("img");
+                                  img.style.width = "45%";
+                                  img.style.aspectRatio = "1 / 1";
+                                  img.style.margin = "2px";
+                                  img.src = basePath + image;
+                                  container.appendChild(img);
+                              });
+                          }
+                      });
+                  });
+              </script>
 
-                                for (let i = 0; i < images.length; i++) {
-                                    console.log(images[i]);
-
-                                    let img = document.createElement("img");
-                                    img.style.width = "25%"
-                                    img.style.aspectRatio = "1 / 1";
-                                    img.style.margin = "10px"
-                                    img.src = basePath + images[i]; // Concatenate base path with the image name
-                                    container.appendChild(img);
-                                }
-                            </script>
-                        </a>
-                        <div card-body class="post-content-entry p-3">
-                            <h2><a href="#">{{ $b->title }}</a></h2>
-                            <p class="card-text">
-                                {{ Str::words($b->text, 25, '...') }}
-                            </p>
-                            <div class="meta">
-                                <span>by <a href="#">{{$b->author_name}}</a></span> <span>on <a
-                                        href="#">{{ $b->updated_at->format('M d, Y') }}</a></span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            @endforeach
 
             </div>
         </div>

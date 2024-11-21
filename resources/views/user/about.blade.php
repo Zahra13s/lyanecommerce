@@ -104,10 +104,10 @@
                     <h2 class="section-title">Our Team</h2>
                 </div>
             </div>
-            <div class="row">
+            <div class="row ovetflow-x-scroll">
                 @foreach ($admins as $a)
                     <!-- Start Column 1 -->
-                    <div class="col-12 col-md-6 col-lg mb-5 mb-md-0">
+                    <div class="col-12 col-md-6 col-lg-3 mb-5 mb-md-0">
                         <img src="{{ asset('user/images/person_1.jpg') }}" class="img-fluid mb-5">
                         <h3 clas><a href="#">{{$a->name}}</a></h3>
                         <span class="d-block position mb-4">{{$a->username}}</span>

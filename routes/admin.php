@@ -15,6 +15,7 @@ Route::middleware('admin')->prefix('admin')->group(function () {
     Route::get('products/page',[RedirectController::class, 'productsPage'])->name('productsPage');
     Route::get('blogs/page',[RedirectController::class, 'blogsPage'])->name('blogsPage');
     Route::get('profile/page', [RedirectController::class, 'profilePage'])->name('profilePage');
+    Route::get('orders/reply',[RedirectController::class, 'ordersReply'])->name('ordersReply');
 
     //create
     Route::post('price/add',[CreateController::class, 'addPrice'])->name('addPrice');

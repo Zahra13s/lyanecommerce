@@ -30,66 +30,68 @@
         <div class="container">
 
             <div class="row">
+                <script>
+                    let images, container, basePath, img;
+                </script>
+
                 @foreach ($blogs as $b)
                     <div class="col-12 col-sm-6 col-md-4 mb-4 mb-md-0">
                         <div class="post-entry card p-3 rounded-3">
                             <a href="#" class="post-thumbnail">
-                                <div class="d-flex flex-wrap" id="imageContainer">
-
-                                </div>
+                                <!-- Unique ID for each image container -->
+                                <div class="d-flex flex-wrap" id="imageContainer-{{ $b->id }}"></div>
 
                                 <script>
-                                    let images = {!! json_encode($b->image) !!};
-                                    images = JSON.parse(images);
+                                    if ({{ $b->id }}) {
+                                        images = {!! json_encode($b->image) !!};
+                                        images = JSON.parse(images);
 
-                                    // Assuming there's a container div in your HTML with the ID "imageContainer"
-                                    const container = document.getElementById("imageContainer");
+                                        container = document.getElementById("imageContainer-{{ $b->id }}");
 
-                                    // Set the base path for images using Laravel's asset function
-                                    const basePath = "{{ asset('blogs') }}/";
+                                        basePath = "{{ asset('blogs') }}/";
 
-                                    for (let i = 0; i < images.length; i++) {
-                                        console.log(images[i]);
-
-                                        let img = document.createElement("img");
-                                        img.style.width = "45%"
-                                        img.style.aspectRatio = "1 / 1";
-                                        img.style.margin = "2px"
-                                        img.src = basePath + images[i]; // Concatenate base path with the image name
-                                        container.appendChild(img);
+                                        for (let i = 0; i < images.length; i++) {
+                                            img = document.createElement("img");
+                                            img.style.width = "45%";
+                                            img.style.aspectRatio = "1 / 1";
+                                            img.style.margin = "2px";
+                                            img.src = basePath + images[i];
+                                            container.appendChild(img);
+                                        }
                                     }
                                 </script>
-
                             </a>
                             <div card-body class="post-content-entry p-3">
-                                <div class="d-flex justiy-content-end bg-danger  my-2">
-                                   <form action="{{route('createFavourite')}}" method="post">
-                                    @csrf
-                                    <input type="hidden" name="blog_id" value="{{$b -> id}}">
-                                    <button type="submit"  style="background-color: transparent; border:none;"> <i data-feather="heart" class="me-2"></i></button>
-                                   </form>
-                                   <form action="{{route('createSave')}}" method="post">
-                                    @csrf
-                                    <input type="hidden" name="blog_id" value="{{$b -> id}}">
-                                    <button type="submit" style="background-color: transparent; border:none;"> <i data-feather="save" class="me-2"></i></button>
-                                   </form>
-
-
+                                <div class="d-flex justify-content-end my-2">
+                                    <form action="{{ route('createFavourite') }}" method="post">
+                                        @csrf
+                                        <input type="hidden" name="blog_id" value="{{ $b->id }}">
+                                        <button type="submit" style="background-color: transparent; border:none;">
+                                            <i data-feather="heart" class="me-2"></i>
+                                        </button>
+                                    </form>
+                                    <form action="{{ route('createSave') }}" method="post">
+                                        @csrf
+                                        <input type="hidden" name="blog_id" value="{{ $b->id }}">
+                                        <button type="submit" style="background-color: transparent; border:none;">
+                                            <i data-feather="save" class="me-2"></i>
+                                        </button>
+                                    </form>
                                 </div>
                                 <h2><a href="#">{{ $b->title }}</a></h2>
                                 <p class="card-text">
                                     {{ Str::words($b->text, 10, '...') }}
-                                    <a href="{{ route('blogDetails', $b->id) }}" style="text-decoration: underline">Read
-                                        More</a>
+                                    <a href="{{ route('blogDetails', $b->id) }}" style="text-decoration: underline">Read More</a>
                                 </p>
                                 <div class="meta">
-                                    <span>by <a href="#">{{ $b->author_name }}</a></span> <span>on <a
-                                            href="#">{{ $b->updated_at->format('M d, Y') }}</a></span>
+                                    <span>by <a href="#">{{ $b->author_name }}</a></span>
+                                    <span>on <a href="#">{{ $b->updated_at->format('M d, Y') }}</a></span>
                                 </div>
                             </div>
                         </div>
                     </div>
                 @endforeach
+
 
             </div>
         </div>
