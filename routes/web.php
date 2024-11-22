@@ -13,8 +13,8 @@ Route::get('/', function () {
     return view('login');
 });
 
-Route::post('/signup', [AuthenticationController::class, 'signup'])->name('signup');
-Route::post('/signin', [AuthenticationController::class, 'signin'])->name('signin');
+Route::post('/sign/up', [AuthenticationController::class, 'signup'])->name('signup');
+Route::post('/sign/in', [AuthenticationController::class, 'signin'])->name('signin');
 
 Route::get('/dashboard', function () {
     return view('dashboard');

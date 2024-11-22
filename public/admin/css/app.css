@@ -13524,7 +13524,7 @@ fieldset:disabled .btn {
 footer.footer {
     background: #fff;
     direction: ltr;
-    padding: 1rem .875rem
+    padding: 1rem .875rem;
 }
 
 footer.footer ul {

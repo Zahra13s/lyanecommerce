@@ -40,7 +40,7 @@
             </div>
         </div>
 
-        <table class="table mb-5">
+        <table class="table mb-1">
             <thead>
                 <tr>
                     <th scope="col">#</th>
@@ -93,9 +93,10 @@
                 @endforeach
             </tbody>
         </table>
-        <div class="d-flex justify-content-end">
-            {{ $data->links('pagination::bootstrap-5') }}
-        </div>
+       <!-- Pagination Links -->
+       <div class="d-flex justify-content-center">
+        {{ $product_counts->links('pagination::bootstrap-5') }}
+    </div>
     </div>
 
     <script>

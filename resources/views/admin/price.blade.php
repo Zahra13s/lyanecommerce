@@ -31,7 +31,7 @@
             </div>
         </div>
 
-        <table class="table mb-5">
+        <table class="table mb-1">
             <thead>
                 <tr>
                     <th scope="col">#</th>
@@ -68,7 +68,7 @@
                                             <form action="{{ route('updatePrice') }}" method="POST">
                                                 @csrf
                                                 <input type="hidden" name="id" value="{{ $d->id }}">
-                                                <input type="text" name="price" placeholder="Add Price" class="form-control">
+                                                <input type="text" name="price" placeholder="Update Price" class="form-control" value="{{$d->price}}">
                                         </div>
                                         <div class="modal-footer">
                                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>

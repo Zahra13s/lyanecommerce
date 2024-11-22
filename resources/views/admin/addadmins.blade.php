@@ -51,11 +51,6 @@
                 </tbody>
             </table>
 
-            <div class="d-flex justify-content-center">
-                {{ $user->links('pagination::bootstrap-5') }}
-            </div>
-
-
             <!-- Pagination Links -->
             <div class="d-flex justify-content-center">
                 {{ $user->links('pagination::bootstrap-5') }}

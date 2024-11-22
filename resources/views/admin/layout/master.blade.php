@@ -139,7 +139,8 @@
 
                     <li class="sidebar-item {{ request()->routeIs('blogsPage') ? 'active' : '' }}">
                         <a class="sidebar-link" href="{{ route('blogsPage') }}">
-                            <i class="align-middle" data-feather="message-circle"></i> <span class="align-middle">Comment Reply</span>
+                            <i class="align-middle" data-feather="message-circle"></i> <span
+                                class="align-middle">Comment Reply</span>
                         </a>
                     </li>
 
@@ -147,8 +148,7 @@
                 </ul>
             </div>
         </nav>
-
-        <div class="main">
+        <div class="main" style="position:relative;">
             <nav class="navbar navbar-expand navbar-light navbar-bg">
                 <a class="sidebar-toggle js-sidebar-toggle">
                     <i class="hamburger align-self-center"></i>
@@ -316,8 +316,8 @@
                                     class="text-dark">Charles Hall</span>
                             </a>
                             <div class="dropdown-menu dropdown-menu-end">
-                                <a class="dropdown-item" href="{{route('profilePage')}}"><i class="align-middle me-1"
-                                        data-feather="user"></i> Profile</a>
+                                <a class="dropdown-item" href="{{ route('profilePage') }}"><i
+                                        class="align-middle me-1" data-feather="user"></i> Profile</a>
                                 <a class="dropdown-item" href="#"><i class="align-middle me-1"
                                         data-feather="pie-chart"></i> Analytics</a>
                                 <div class="dropdown-divider"></div>
@@ -347,8 +347,9 @@
 
             @yield('main')
 
-            <footer class="footer">
-                <div class="container-fluid">
+          <div class="mt-4">
+            <footer class="footer w-100" style="position:absolute; bottom:0;">
+                <div class="w-100 footer">
                     <div class="row text-muted">
                         <div class="col-6 text-start">
                             <p class="mb-0">
@@ -375,6 +376,7 @@
                     </div>
                 </div>
             </footer>
+          </div>
         </div>
     </div>
 

@@ -38,7 +38,7 @@ class RedirectController extends Controller
         $product_counts = DB::table('products')
             ->select('category_id', DB::raw('count(*) as product_count'))
             ->groupBy('category_id')
-            ->get();
+            ->paginate(10);
 
         $categoryProductCounts = [];
         foreach ($product_counts as $product) {
