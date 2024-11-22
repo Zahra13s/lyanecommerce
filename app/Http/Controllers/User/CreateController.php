@@ -9,16 +9,46 @@ use App\Models\Comment;
 use App\Models\Product;
 use App\Models\Category;
 use App\Models\Favourite;
-use Illuminate\Support\Str;
 // use Illuminate\Support\Facades\Request;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use App\Models\ProductRequest;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Validator;
 
 class CreateController extends Controller
 {
+    public function addProductDetails(Request $request)
+    {
+        $validated = $request->validate([
+            'width' => 'required',
+            'length' => 'required',
+            'color_id' => 'required',
+        ]);
+
+        // Create a cart entry for the product
+        $cart = Cart::create([
+            'user_id' => Auth::id(),
+            'product_id' => $request->product_id, // Assuming you pass product_id in the request
+            'price' => $request->price, // Assuming you pass product price in the request
+            'qty' => 1,
+            'sub_total' => $request->price, // Assuming price * qty
+        ]);
+
+        $cartId = $cart->id;
+
+        // Create a product request with width, length, and color_id
+        $createProductReq = ProductRequest::create([
+            'order_id' => $cartId,  // Initially, set order_id to cart_id
+            'width' => $request->width,
+            'length' => $request->length,
+            'color_id' => $request->color_id,
+        ]);
+
+        return view('user.cart');
+    }
+
     public function addToCart($productId)
     {
         $product = Product::findOrFail($productId);
@@ -28,10 +58,12 @@ class CreateController extends Controller
             ->first();
 
         if ($existingCartItem) {
+            // If item already exists in the cart, increase the quantity
             $existingCartItem->qty += 1;
             $existingCartItem->sub_total = $existingCartItem->qty * $product->price;
             $existingCartItem->save();
         } else {
+            // Otherwise, create a new cart item
             Cart::create([
                 'user_id' => Auth::id(),
                 'product_id' => $productId,
@@ -40,6 +72,7 @@ class CreateController extends Controller
                 'sub_total' => $product->price,
             ]);
         }
+
         return back()->with('success', 'Product added to cart successfully!');
     }
 
@@ -67,27 +100,33 @@ class CreateController extends Controller
         }
 
         foreach ($cartItems as $item) {
-            DB::table('orders')->insert([
-                'user_id'    => $userId,
+            // Create an order for each cart item
+            $order = Order::create([
+                'user_id' => $userId,
                 'product_id' => $item->product_id,
-                'qty'        => $item->qty,
-                'sub_total'  => $item->sub_total,
-                'price'      => $item->price,
+                'qty' => $item->qty,
+                'sub_total' => $item->sub_total,
+                'price' => $item->price,
                 'order_code' => $orderCode,
+            ]);
+
+            // Update the corresponding product request's order_id to the newly created order's id
+            ProductRequest::where('order_id', $item->id)->update([
+                'order_id' => $order->id,
             ]);
         }
 
+        // Insert into the order_verified table
         DB::table('order_varifieds')->insert([
             'order_code' => $orderCode,
-            'image'      => $imagePath,
+            'image' => $imagePath,
         ]);
 
+        // Delete cart items after the order has been placed
         DB::table('carts')->where('user_id', $userId)->delete();
 
         return back()->with('success', 'Order placed successfully!');
     }
-
-
 
 
     public function createComment(Request $request)
@@ -144,18 +183,17 @@ class CreateController extends Controller
     }
 
     public function filterProducts(Request $request)
-{
-    $categories = Category::all();
-    $categoryId = $request->get('category');
+    {
+        $categories = Category::all();
+        $categoryId = $request->get('category');
 
-    if ($categoryId) {
-        $products = Product::where('category_id', $categoryId)->get();
-    } else {
-        $products = Product::all();
+        if ($categoryId) {
+            $products = Product::where('category_id', $categoryId)->get();
+        } else {
+            $products = Product::all();
+        }
+
+        return view('user.shop', compact('categories', 'products'));
     }
-
-    return view('user.shop', compact('categories', 'products'));
-}
-
 
 }

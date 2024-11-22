@@ -3,11 +3,11 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Models\User;
+use App\Models\color;
 use App\Models\Price;
 use App\Models\Product;
 use App\Models\Category;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 
@@ -53,8 +53,8 @@ class UpdateController extends Controller
         return back()->with('success', 'Profile updated successfully!');
     }
 
-
-    public function updateRole(Request $request) {
+    public function updateRole(Request $request)
+    {
         $request->validate([
             'user_id' => 'required|exists:users,id',
             'role' => 'required|in:user,admin', // Ensure valid roles
@@ -72,18 +72,27 @@ class UpdateController extends Controller
         }
     }
 
-
-    public function updatePrice(Request $request){
+    public function updatePrice(Request $request)
+    {
         $price = Price::find($request->id);
 
         $price->update(["price" => $request->price]);
         return back();
     }
 
-        public function updateCategory(Request $request){
+    public function updateCategory(Request $request)
+    {
         $category = Category::find($request->id);
 
         $category->update(["category" => $request->category]);
+        return back();
+    }
+
+    public function updateColor(Request $request)
+    {
+        $color = color::find($request->id);
+
+        $color->update(["color" => $request->color]);
         return back();
     }
 
@@ -108,7 +117,7 @@ class UpdateController extends Controller
             "name" => $request->name,
             "image" => $imagePath,
             "category_id" => $request->category,
-            "description" => $request->description
+            "description" => $request->description,
         ]);
 
         return back();

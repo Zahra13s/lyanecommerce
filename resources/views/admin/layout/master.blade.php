@@ -84,6 +84,13 @@
                         </a>
                     </li>
 
+                    <li class="sidebar-item {{ request()->routeIs('colorsPage') ? 'active' : '' }}">
+                        <a class="sidebar-link" href="{{ route('colorsPage') }}">
+                            <i class="align-middle" data-feather="aperture"></i> <span class="align-middle">Add
+                                Colors</span>
+                        </a>
+                    </li>
+
                     <li class="sidebar-item {{ request()->routeIs('productsPage') ? 'active' : '' }}">
                         <a class="sidebar-link" href="{{ route('productsPage') }}">
                             <i class="align-middle" data-feather="package"></i> <span class="align-middle">Add Products

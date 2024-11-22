@@ -32,6 +32,8 @@
                         <strong>Sub Total:</strong> ${{ number_format($o->sub_total, 2) }} <br>
                         <strong>User:</strong> {{ $o->username }} <br>
                         <strong>User Email:</strong> {{ $o->email }} <br>
+                        <strong>Width x Length:</strong> {{ $o->width }} x {{ $o->length }}  <br>
+                        <strong>Color:</strong> {{ $o->color }}  <br>
                     </div>
                 </div>
             @endforeach

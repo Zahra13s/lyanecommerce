@@ -40,10 +40,10 @@
                 </div>
 
                 <div class="col-12 col-md-8 col-lg-10 mb-5">
-                    <div class="row">
+                    <div class="row p-5">
                         @foreach ($products as $p)
                             <div class="col-12 col-md-4 col-lg-3">
-                                <a class="product-item" href="{{ route('addToCart', $p->id) }}">
+                                <a class="product-item" href="{{ route('productDetailsPage', $p->id) }}">
                                     <img src="{{ asset('products/' . $p->image) }}"
                                          style="width: 200px; height: 200px; object-fit: cover;" class="img-fluid product-thumbnail">
                                     <h3 class="product-title">{{ $p->name }}</h3>

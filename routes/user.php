@@ -16,6 +16,7 @@ Route::middleware('user')->prefix('user')->group(function () {
     Route::get('/contactUs/page', [RedirectController::class, 'contactUsPage'])->name('contactUsPage');
     Route::get('/cart/page', [RedirectController::class, 'cartPage'])->name('cartPage');
     Route::get('recipe/page',[RedirectController::class, 'reciepePage'])->name('reciepePage');
+    Route::get('product/details/{id}', [RedirectController::class, 'productDetailsPage'])->name('productDetailsPage');
 
     //create
     Route::get('/add/to/cart/{id}', [CreateController::class, 'addToCart'])->name('addToCart');
@@ -23,9 +24,8 @@ Route::middleware('user')->prefix('user')->group(function () {
     Route::post('/create/comment', [CreateController::class, 'createComment'])->name('createComment');
     Route::post('/create/favourite', [CreateController::class, 'createFavourite'])->name('createFavourite');
     Route::post('/create/save', [CreateController::class, 'createSave'])->name('createSave');
-
     Route::get('/shop/filter/product', [CreateController::class, 'filterProducts'])->name('filterProducts');
-
+    Route::post('/details/product', [CreateController::class, 'addProductDetails'])->name('addProductDetails');
 
     Route::post('/cart/update', [UpdateController::class, 'update'])->name('cart.update');
 

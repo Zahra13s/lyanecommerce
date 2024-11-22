@@ -48,6 +48,12 @@ class RedirectController extends Controller
         return view('admin.category', compact('data', 'categoryProductCounts'));
     }
 
+    public function colorsPage()
+    {
+        $data = DB::table('colors')->paginate(15);
+        return view('admin.color', compact('data'));
+    }
+
     public function productsPage()
     {
         $data = Category::get();
@@ -95,12 +101,17 @@ class RedirectController extends Controller
                 'orders.sub_total',
                 'orders.price as order_price',
                 'order_varifieds.image as order_image',
-                'categories.category as product_category'
+                'categories.category as product_category',
+                'product_requests.width',
+                'product_requests.length',
+                'colors.color'
             )
             ->join('users', 'orders.user_id', '=', 'users.id')
             ->join('products', 'orders.product_id', '=', 'products.id')
             ->join('order_varifieds', 'orders.order_code', '=', 'order_varifieds.order_code')
             ->join('categories', 'products.category_id', '=', 'categories.id')
+            ->join('product_requests','product_requests.order_id','orders.id')
+            ->join('colors','colors.id','product_requests.color_id')
             ->where('orders.order_code', $order_code)
             ->get();
 

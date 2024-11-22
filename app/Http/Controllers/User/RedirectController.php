@@ -5,6 +5,7 @@ namespace App\Http\Controllers\User;
 use App\Models\Blog;
 use App\Models\Cart;
 use App\Models\User;
+use App\Models\color;
 use App\Models\Comment;
 use App\Models\Product;
 use App\Models\Category;
@@ -41,7 +42,7 @@ class RedirectController extends Controller
     {
         $admins = User::whereIn("role", ["admin", "superadmin"])->get();
 
-        return view("user.about",compact('admins'));
+        return view("user.about", compact('admins'));
     }
 
     public function blogPage()
@@ -66,8 +67,10 @@ class RedirectController extends Controller
 
     public function cartPage()
     {
-        $cart_items = Cart::select('carts.*', 'products.name', 'products.image')
+        $cart_items = Cart::select('carts.*', 'products.name', 'products.image', "product_requests.width", "product_requests.length", "product_requests.color_id","colors.color")
             ->leftJoin("products", "products.id", "carts.product_id")
+            ->leftJoin("product_requests", "product_requests.order_id",'carts.id')
+            ->leftJoin("colors", "colors.id",'product_requests.color_id')
             ->where("carts.user_id", auth()->user()->id)
             ->get();
         // dd($cart_items);
@@ -81,5 +84,16 @@ class RedirectController extends Controller
             ->where("carts.user_id", auth()->user()->id)
             ->get();
         return view('user.reciept', compact('cart_items'));
+    }
+
+    public function productDetailsPage($id)
+    {
+        $product = Product::
+        select('products.*','categories.category')
+        ->leftJoin("categories","categories.id","products.category_id")
+
+        ->where("products.id",$id)->first();
+        $colors = color::get();
+        return view('user.productDetails',compact('product','colors'));
     }
 }

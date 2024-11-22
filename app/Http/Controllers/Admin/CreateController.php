@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Models\Blog;
+use App\Models\color;
 use App\Models\Price;
 use App\Models\Product;
 use App\Models\Category;
@@ -33,6 +34,19 @@ class CreateController extends Controller
 
         $data = Category::create([
             'category' => $request->category,
+        ]);
+        return back();
+    }
+
+
+    public function addColor(Request $request)
+    {
+        $validated = $request->validate([
+            'color' => 'required',
+        ]);
+
+        $data = color::create([
+            'color' => $request->color,
         ]);
         return back();
     }

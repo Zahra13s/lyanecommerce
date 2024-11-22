@@ -28,6 +28,7 @@
                                 <tr>
                                     <th class="product-thumbnail">Image</th>
                                     <th class="product-name">Product</th>
+                                    <th class="product-details">Details</th>
                                     <th class="product-price">Price</th>
                                     <th class="product-quantity">Quantity</th>
                                     <th class="product-total">Total</th>
@@ -45,6 +46,13 @@
                                         </td>
                                         <td class="product-name">
                                             <h2 class="h5 text-black">{{ $c->name }}</h2>
+                                        </td>
+                                        <td class="product-details">
+                                            <ul>
+                                                <li>{{ $c->id }}</li>
+                                                <li>{{ $c->width }} x {{ $c->length }}</li>
+                                                <li>{{ $c->color }}</li>
+                                            </ul>
                                         </td>
                                         <td class="product-price">{{ $c->price }} mmk</td>
                                         <td class="product-quantity">
