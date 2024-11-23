@@ -2,35 +2,28 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules\Password;
 
-
-
 class AuthenticationController extends Controller
 {
     //
-    function signup(Request $request)
+    public function signup(Request $request)
     {
         $validated = $request->validate([
             'name' => 'required',
-            'username' => [
-        'required',
-        'string',
-        new Lowercase(),
-        'unique:users,username',
-    ],
+            'username' => 'required|string|unique:users',
             'email' => 'required|unique:users,email',
             'password' => [
-                'required','string',
+                'required', 'string',
                 Password::min(8)
                     ->letters()
                     ->mixedCase()
-                    ->symbols()
+                    ->symbols(),
             ],
         ]);
 
@@ -44,11 +37,9 @@ class AuthenticationController extends Controller
         Auth::login($user);
         return redirect()->route('Userdashboard');
 
-
     }
 
-
-    function signin(Request $request)
+    public function signin(Request $request)
     {
         $validated = $request->validate([
             'email' => 'required|email',
@@ -67,10 +58,9 @@ class AuthenticationController extends Controller
                 return redirect()->route('Admindashboard');
             }
 
-        }else{
+        } else {
             return "something wrong";
         }
     }
-
 
 }

@@ -18,8 +18,8 @@ class RedirectController extends Controller
     //
     public function dashboard()
     {
-        $products = Product::limit(3)->get();
-        $blogs = Blog::limit(3)->get();
+        $products = Product::orderBy('created_at', 'desc')->limit(3)->get();
+        $blogs = Blog::orderBy('created_at', 'desc')->limit(3)->get();
         return view("user.dashboard", compact('products', 'blogs'));
     }
     public function shopPage(Request $request)

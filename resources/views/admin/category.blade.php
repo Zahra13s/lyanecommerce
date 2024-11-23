@@ -94,8 +94,8 @@
             </tbody>
         </table>
        <!-- Pagination Links -->
-       <div class="d-flex justify-content-center">
-        {{ $product_counts->links('pagination::bootstrap-5') }}
+       <div class="d-flex justify-content-end">
+        {{ $data->links('pagination::bootstrap-5') }}
     </div>
     </div>
 

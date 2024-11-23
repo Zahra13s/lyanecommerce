@@ -33,7 +33,7 @@ class RedirectController extends Controller
 
     public function categoriesPage()
     {
-        $data = DB::table('categories')->paginate(15);
+        $data = DB::table('categories')->paginate(10);
 
         $product_counts = DB::table('products')
             ->select('category_id', DB::raw('count(*) as product_count'))
@@ -58,8 +58,12 @@ class RedirectController extends Controller
     {
         $data = Category::get();
         $product = Product::select('products.*', 'categories.id as category_id', 'categories.category')
-            ->leftJoin('categories', 'products.category_id', 'categories.id')->paginate(5);
+            ->leftJoin('categories', 'products.category_id', 'categories.id')->paginate(3);
         return view('admin.product', compact('data', 'product'));
+    }
+
+    public function productRating(){
+        return view('admin.productRating');
     }
 
     public function blogsPage()

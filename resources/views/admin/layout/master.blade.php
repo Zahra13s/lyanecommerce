@@ -99,8 +99,8 @@
                     </li>
 
 
-                    <li class="sidebar-item {{ request()->routeIs('productsPage') ? 'active' : '' }}">
-                        <a class="sidebar-link" href="{{ route('productsPage') }}">
+                    <li class="sidebar-item {{ request()->routeIs('productRating') ? 'active' : '' }}">
+                        <a class="sidebar-link" href="{{ route('productRating') }}">
                             <i class="align-middle" data-feather="star"></i> <span class="align-middle">Product Rating
                             </span>
                         </a>
