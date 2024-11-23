@@ -28,18 +28,20 @@
                 <div class="col-8">
                     <h3>{{$product->name}}</h3>
                     <h6>{{$product->category}}</h6>
+                    <h6>Price: {{$product->price}} </h6>
+                    <small class="text-danger"><i data-feather="alert-triangle"></i> Be aware that, this price is for 1' x 1' price only. The actual price will be based on the size you want.</small>
                     <p>{{$product->description}}</p>
                     <form action="{{route('addProductDetails')}}" method="post">
                         @csrf
-                        <input type="hidden" name="product_id">
+                        <input type="hidden" name="product_id" value="{{ $product->id }}">
                         <input type="text" name="width" class="form-control mt-3" placeholder="Enter Width">
                         <input type="text" name="length" class="form-control mt-3" placeholder="Enter Height">
-                        <select name="color" id="" class="form-control mt-3">
+                        <select name="color_id" class="form-control mt-3">
                             @foreach ($colors as $c)
-                            <option value="{{$c->id}}">{{$c->color}}</option>
+                                <option value="{{$c->id}}">{{$c->color}}</option>
                             @endforeach
                         </select>
-                        <input class="btn mt-3" type="submit" value="Add To Cart"></input>
+                        <input class="btn mt-3" type="submit" value="Add To Cart">
                     </form>
                 </div>
             </div>

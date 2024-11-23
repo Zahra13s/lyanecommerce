@@ -22,16 +22,15 @@ class RedirectController extends Controller
         $blogs = Blog::orderBy('created_at', 'desc')->limit(3)->get();
         return view("user.dashboard", compact('products', 'blogs'));
     }
+
     public function shopPage(Request $request)
     {
-        $categories = Category::all(); // Get all categories
-        $categoryId = $request->get('category'); // Get the selected category from query string
+        $categories = Category::all();
+        $categoryId = $request->get('category');
 
         if ($categoryId) {
-            // Filter products by the selected category
             $products = Product::where('category_id', $categoryId)->get();
         } else {
-            // If no category is selected, show all products
             $products = Product::all();
         }
 
@@ -91,8 +90,10 @@ class RedirectController extends Controller
         $product = Product::
         select('products.*','categories.category')
         ->leftJoin("categories","categories.id","products.category_id")
-
         ->where("products.id",$id)->first();
+        if (!$product) {
+            return redirect()->route('shopPage')->with('error', 'Product not found.');
+        }
         $colors = color::get();
         return view('user.productDetails',compact('product','colors'));
     }

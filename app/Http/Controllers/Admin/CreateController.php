@@ -38,7 +38,7 @@ class CreateController extends Controller
         return back();
     }
 
-
+    //colors create
     public function addColor(Request $request)
     {
         $validated = $request->validate([

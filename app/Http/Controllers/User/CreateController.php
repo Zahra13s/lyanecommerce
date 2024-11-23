@@ -20,34 +20,41 @@ use Illuminate\Support\Facades\Auth;
 class CreateController extends Controller
 {
     public function addProductDetails(Request $request)
-    {
-        $validated = $request->validate([
-            'width' => 'required',
-            'length' => 'required',
-            'color_id' => 'required',
-        ]);
+{
+    // Validate the input
+    $validated = $request->validate([
+        'width' => 'required',
+        'length' => 'required',
+        'color_id' => 'required',
+    ]);
 
-        // Create a cart entry for the product
-        $cart = Cart::create([
-            'user_id' => Auth::id(),
-            'product_id' => $request->product_id, // Assuming you pass product_id in the request
-            'price' => $request->price, // Assuming you pass product price in the request
-            'qty' => 1,
-            'sub_total' => $request->price, // Assuming price * qty
-        ]);
+    // Retrieve the product from the database by its ID
+    $product = Product::findOrFail($request->product_id);
 
-        $cartId = $cart->id;
+    // Get the price of the product
+    $price = $product->price;
 
-        // Create a product request with width, length, and color_id
-        $createProductReq = ProductRequest::create([
-            'order_id' => $cartId,  // Initially, set order_id to cart_id
-            'width' => $request->width,
-            'length' => $request->length,
-            'color_id' => $request->color_id,
-        ]);
+    // Create the cart entry
+    $cart = Cart::create([
+        'user_id' => Auth::id(),
+        'product_id' => $product->id,
+        'price' => $price,
+        'qty' => 1,
+        'sub_total' => $price,  // Assuming price * qty is the sub_total
+    ]);
 
-        return view('user.cart');
-    }
+    // Create the product request
+    ProductRequest::create([
+        'order_id' => $cart->id,
+        'width' => $request->width,
+        'length' => $request->length,
+        'color_id' => $request->color_id,
+    ]);
+
+    // Redirect or return the cart view
+    return back();  // Redirect to the cart page
+}
+
 
     public function addToCart($productId)
     {
