@@ -8,15 +8,17 @@ use App\Models\Order;
 use App\Models\Rating;
 use App\Models\Comment;
 use App\Models\Product;
-use App\Models\Category;
 // use Illuminate\Support\Facades\Request;
+use App\Models\Category;
 use App\Models\Favourite;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use App\Models\OrderVarified;
 use App\Models\ProductRequest;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 
 class CreateController extends Controller
 {
@@ -33,7 +35,7 @@ class CreateController extends Controller
         $length = $request->length;
         $product_price = $product->price;
         $sqrfeet = ($width * $length) / 144;
-        $price = ($sqrfeet * $product_price ) + ($sqrfeet * 3500 );
+        $price = ($sqrfeet * $product_price) + ($sqrfeet * 3500);
 
         $cart = Cart::create([
             'user_id' => Auth::id(),
@@ -50,7 +52,7 @@ class CreateController extends Controller
             'color_id' => $request->color_id,
         ]);
 
-        return back()->with('showRatingModal', true);;
+        return back()->with('showRatingModal', true);
     }
 
     public function addToCart($productId)
@@ -116,12 +118,13 @@ class CreateController extends Controller
             ]);
         }
 
-        DB::table('order_varifieds')->insert([
+        OrderVarified::create([
             'order_code' => $orderCode,
             'image' => $imagePath,
         ]);
 
         DB::table('carts')->where('user_id', $userId)->delete();
+        $this->updateProductSalesCount($order->product_id, $order->qty);
 
         return back()->with('success', 'Order placed successfully!');
     }
@@ -141,10 +144,8 @@ class CreateController extends Controller
 
     public function createFavourite(Request $request)
     {
-        // dd($request->all());
         $userId = Auth::user()->id;
         $blogId = $request->blog_id;
-        $type = "blog";
 
         $existingFavourite = Favourite::where('item_id', $blogId)
             ->where('user_id', $userId)
@@ -154,7 +155,6 @@ class CreateController extends Controller
             Favourite::create([
                 'item_id' => $blogId,
                 'user_id' => $userId,
-                'type' => 0
             ]);
         }
         return back();
@@ -193,7 +193,8 @@ class CreateController extends Controller
         return view('user.shop', compact('categories', 'products'));
     }
 
-    public function productRate(Request $request) {
+    public function productRate(Request $request)
+    {
         $request->validate([
             'product_id' => 'required|exists:products,id',
             'rating' => 'required|integer|min:1|max:5',
@@ -202,8 +203,8 @@ class CreateController extends Controller
         $userId = auth()->id();
 
         $existingRating = Rating::where('product_id', $request->product_id)
-                                ->where('user_id', $userId)
-                                ->first();
+            ->where('user_id', $userId)
+            ->first();
 
         if ($existingRating) {
             $existingRating->update([
@@ -220,5 +221,57 @@ class CreateController extends Controller
         return back()->with('success', 'Rating submitted successfully!');
     }
 
+    public function sendContactForm(Request $request)
+    {
+        $validated = $request->validate([
+            'first_name' => 'required|string|max:255',
+            'last_name' => 'required|string|max:255',
+            'email' => 'required|email|max:255',
+            'subject' => 'required',
+            'message' => 'required|string',
+        ]);
+
+        if ($this->isOnline()) {
+            $email_data = [
+                'recipient' => "lyancalligraphyanddecor@gmail.com",
+                'fromEmail' => $request->email,
+                'fromName' => $request->first_name . ' ' . $request->last_name,
+                'subject' => $request->subject,
+                'body' => $request->message
+            ];
+
+            Mail::send('email-template', $email_data, function ($message) use ($email_data) {
+                $message->to($email_data['recipient'])
+                        ->from($email_data['fromEmail'], $email_data['fromName'])
+                        ->subject($email_data['subject']);
+            });
+
+            return redirect()->back()->with('success', 'Your message has been sent successfully!');
+        } else {
+            return redirect()->back()->with('error', 'Unable to send message, please check your connection.');
+        }
+    }
+
+    public function isOnline($site = "https://youtube.com/")
+    {
+        return @fopen($site, "r") ? true : false;
+    }
+
+    public function updateProductSalesCount()
+    {
+
+        $productSales = Order::leftJoin('products', 'products.id', '=', 'orders.product_id')
+            ->select('orders.product_id', DB::raw('SUM(orders.qty) as total_qty_sold'))
+            ->groupBy('orders.product_id')
+            ->get();
+
+        foreach ($productSales as $sale) {
+
+            Product::where('id', $sale->product_id)
+                ->update(['sales_count' => $sale->total_qty_sold]);
+        }
+        $updatedProducts = Product::all();
+        return $updatedProducts;
+    }
 
 }

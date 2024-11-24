@@ -24,7 +24,8 @@ class RedirectController extends Controller
     {
         $products = Product::orderBy('created_at', 'desc')->limit(3)->get();
         $blogs = Blog::orderBy('created_at', 'desc')->limit(3)->get();
-        return view("user.dashboard", compact('products', 'blogs'));
+        $top3Sales = Product::orderBy("sales_count", "desc")->limit(3)->get();
+        return view("user.dashboard", compact('products', 'blogs','top3Sales'));
     }
 
     public function shopPage(Request $request)

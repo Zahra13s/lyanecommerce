@@ -39,6 +39,7 @@ Route::middleware('admin')->prefix('admin')->group(function () {
     Route::post('/update-blog/{id}', [UpdateController::class, 'update'])->name('updateBlog');
     Route::get('/confirm/order/{order_code}', [UpdateController::class, 'checkOrders'])->name('checkOrders');
 
+
     Route::delete('/product/{id}', [DeleteController::class, 'deleteProduct'])->name('deleteProduct');
     Route::delete('/blog/{id}', [DeleteController::class, 'deleteBlog'])->name('deleteBlog');
 });

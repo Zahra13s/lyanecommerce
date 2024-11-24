@@ -32,9 +32,12 @@ Route::middleware('user')->prefix('user')->group(function () {
     Route::get('/shop/filter/product', [CreateController::class, 'filterProducts'])->name('filterProducts');
     Route::post('/details/product', [CreateController::class, 'addProductDetails'])->name('addProductDetails');
     Route::post('product/rate', [CreateController::class, 'productRate'])->name('productRate');
+    Route::post('/user/contact/send', [CreateController::class, 'sendContactForm'])->name('user.contact.send');
+
 
     Route::post('/cart/update', [UpdateController::class, 'update'])->name('cart.update');
     Route::post('/profile/update', [UpdateController::class, 'userUpdateProfile'])->name('userUpdateProfile');
+    Route::get('product/count/edit',[CreateController::class, 'productCount'])->name('productCount');
 
     Route::get('/cart/delete/{id}', [DeleteController::class, 'delete'])->name('cart.delete');
 

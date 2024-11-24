@@ -17,8 +17,6 @@ return new class extends Migration
             $table->string('title');
             $table->string('author_name');
             $table->longText('text');
-            $table->bigInteger('react')->default(0);
-            $table->bigInteger('comment')->default(0);
             $table->timestamps();
         });
     }

@@ -25,19 +25,18 @@
 
                     </li>
                 </ul>
-                <!-- Profile Update Form -->
-                <form action="{{ route('updateProfile') }}" method="POST" enctype="multipart/form-data">
-                    @csrf
-                    <input type="file" name="image" class="form-control mt-3">
-                    <input type="text" name="phone" class="form-control mt-3" placeholder="Phone Number">
-                    <input type="text" name="address" class="form-control mt-3" placeholder="Address">
-                    <button type="submit" class="btn btn-primary mt-2">Update Profile</button>
-                </form>
             </div>
 
             <!-- Placeholder for additional content -->
             <div class="col-6 d-flex align-items-center justify-content-center">
-                <p class="text-muted">Additional content or statistics here...</p>
+                               <!-- Profile Update Form -->
+                               <form action="{{ route('updateProfile') }}" method="POST" enctype="multipart/form-data">
+                                @csrf
+                                <input type="file" name="image" class="form-control mt-3">
+                                <input type="text" name="phone" class="form-control mt-3" placeholder="Phone Number">
+                                <input type="text" name="address" class="form-control mt-3" placeholder="Address">
+                                <button type="submit" class="btn btn-primary mt-2">Update Profile</button>
+                            </form>
             </div>
         </div>
     </div>
