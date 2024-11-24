@@ -29,7 +29,11 @@ class CreateController extends Controller
         ]);
 
         $product = Product::findOrFail($request->product_id);
-        $price = $product->price;
+        $width = $request->width;
+        $length = $request->length;
+        $product_price = $product->price;
+        $sqrfeet = ($width * $length) / 144;
+        $price = ($sqrfeet * $product_price ) + ($sqrfeet * 3500 );
 
         $cart = Cart::create([
             'user_id' => Auth::id(),
@@ -58,12 +62,10 @@ class CreateController extends Controller
             ->first();
 
         if ($existingCartItem) {
-            // If item already exists in the cart, increase the quantity
             $existingCartItem->qty += 1;
             $existingCartItem->sub_total = $existingCartItem->qty * $product->price;
             $existingCartItem->save();
         } else {
-            // Otherwise, create a new cart item
             Cart::create([
                 'user_id' => Auth::id(),
                 'product_id' => $productId,

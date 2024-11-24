@@ -26,7 +26,7 @@
     <!-- End Hero Section -->
 
     <!-- Start Blog Section -->
-    <div class="blog-section ">
+    <div class="blog-section  ">
         <div class="container">
 
             <div class="row">

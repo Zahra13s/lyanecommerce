@@ -60,16 +60,8 @@
                                         @endphp
 
                                         <tr>
-                                            <td><strong>Sub Total</strong></td>
-                                            <td>{{ $subtotal }}</td>
-                                        </tr>
-                                        <tr>
-                                            <td><strong>Shipping Fees</strong></td>
-                                            <td>{{ $shipping_fee }}</td>
-                                        </tr>
-                                        <tr>
                                             <td><strong>Total</strong></td>
-                                            <td>{{ $total }}</td>
+                                            <td>{{ $subtotal }}</td>
                                         </tr>
                                     </tbody>
                                 </table>

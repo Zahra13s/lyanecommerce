@@ -48,8 +48,7 @@
                                             <h2 class="h5 text-black">{{ $c->name }}</h2>
                                         </td>
                                         <td class="product-details">
-                                            <ul>
-                                                <li>{{ $c->id }}</li>
+                                            <ul style="list-style:none; padding:0px;">
                                                 <li>{{ $c->width }} x {{ $c->length }}</li>
                                                 <li>{{ $c->color }}</li>
                                             </ul>

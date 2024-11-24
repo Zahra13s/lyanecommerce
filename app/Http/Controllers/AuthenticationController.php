@@ -63,4 +63,10 @@ class AuthenticationController extends Controller
         }
     }
 
+    //profile
+
+    public function profilePage()
+    {
+        return view('profile');
+    }
 }

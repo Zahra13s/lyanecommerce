@@ -76,15 +76,13 @@
                                 class="text-white">{{ auth()->user()->name }}</span>
                         </a>
                         <div class="dropdown-menu dropdown-menu-end">
-                            <a class="dropdown-item" href="{{route('profilePage')}}"><i class="align-middle me-1"
+                            <a class="dropdown-item" href="{{route('userProfilePage')}}"><i class="align-middle me-1"
                                     data-feather="user"></i> Profile</a>
+                                    <div class="dropdown-divider"></div>
                             <a class="dropdown-item" href="{{route('orderHistoryPage')}}"><i class="align-middle me-1"
                                     data-feather="package"></i> Order History</a>
-                            <div class="dropdown-divider"></div>
                             <a class="dropdown-item" href="{{route('ratingHistoryPage')}}"><i class="align-middle me-1"
                                     data-feather="star"></i> Rating History</a>
-                            <a class="dropdown-item" href="{{route('contactHistoryPage')}}"><i class="align-middle me-1"
-                                    data-feather="phone"></i> Contact History</a>
                             <div class="dropdown-divider"></div>
                             <!-- Authentication -->
                             <div class="dropdown-item" href="index.html">

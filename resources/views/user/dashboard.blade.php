@@ -143,7 +143,7 @@
                         <li>We ensure every element is in harmony, creating a cohesive and inviting atmosphere.</li>
                         <li>From concept to completion, we handle each step to make your vision a reality.</li>
                     </ul>
-                    <a herf="{{ route('blogPage') }}" class="btn">Explore</a>
+                    <a href="{{ route('blogPage') }}" class="btn">Explore</a>
                 </div>
             </div>
         </div>
@@ -213,7 +213,7 @@
 
             <div class="row">
                 @foreach ($blogs as $b)
-                    <div class="col-12 col-sm-6 col-md-4 mb-4 mb-md-0">
+                    <div class="col-12 col-sm-6 col-md-4 mb-4 mb-md-0 card p-3">
                         <div class="post-entry">
                             <a href="#" class="post-thumbnail">
                                 <div class="d-flex flex-wrap" id="imageContainer-{{ $b->id }}">
@@ -221,7 +221,7 @@
                                 </div>
                             </a>
                             <div class="post-content-entry">
-                                <h3><a href="#">{{ $b->title }}</a></h3>
+                                <h3><a href="{{ route('blogDetails', $b->id) }}">{{ $b->title }}</a></h3>
                                 <div class="meta">
                                     <span>by <a href="#">{{$b->author_name}}</a></span> <span>on <a
                                             href="#">{{ $b->updated_at->format('M d, Y') }}</a></span>

@@ -55,12 +55,13 @@
                 <h6>Price: {{ $product->price }} </h6>
                 <small class="text-danger"><i data-feather="alert-triangle"></i> Be aware that, this price is for 1' x
                     1' price only. The actual price will be based on the size you want.</small>
+                    <h6>Calculated Price: <span id="calculated-price">0</span> </h6>
                 <p>{{ $product->description }}</p>
                 <form action="{{ route('addProductDetails') }}" method="post">
                     @csrf
                     <input type="hidden" name="product_id" value="{{ $product->id }}">
-                    <input type="text" name="width" class="form-control mt-3" placeholder="Enter Width">
-                    <input type="text" name="length" class="form-control mt-3" placeholder="Enter Height">
+                    <input type="text" id="width" name="width" class="form-control mt-3" placeholder="Enter Width">
+                    <input type="text" id="length" name="length" class="form-control mt-3" placeholder="Enter Height">
                     <select name="color_id" class="form-control mt-3">
                         @foreach ($colors as $c)
                         <option value="{{ $c->id }}">{{ $c->color }}</option>
@@ -74,6 +75,28 @@
                         </button>
                     </div>
                 </form>
+                <script>
+                    document.addEventListener('DOMContentLoaded', () => {
+                        const pricePerSqFt = {{ $product->price }};
+                        const minadditionalCostPerSqFt = 3500;
+                        const maxadditionalCostPerSqFt = 5000;
+                        const calculatedPriceElement = document.getElementById('calculated-price');
+                        const widthInput = document.getElementById('width');
+                        const lengthInput = document.getElementById('length');
+
+                        function calculatePrice() {
+                            const width = parseFloat(widthInput.value) || 0;
+                            const length = parseFloat(lengthInput.value) || 0;
+                            const sqFeet = (width * length) / 144; // Area in square feet
+                            const minPrice = sqFeet > 0 ? (sqFeet * pricePerSqFt) + (sqFeet * minadditionalCostPerSqFt) : 0;
+                            const maxPrice = sqFeet > 0 ? (sqFeet * pricePerSqFt) + (sqFeet * maxadditionalCostPerSqFt) : 0;
+                            calculatedPriceElement.textContent = `${minPrice.toFixed(2)} ~ ${maxPrice.toFixed(2) }` ;
+                        }
+
+                        widthInput.addEventListener('input', calculatePrice);
+                        lengthInput.addEventListener('input', calculatePrice);
+                    });
+                </script>
             </div>
         </div>
     </div>

@@ -20,8 +20,9 @@ Route::middleware('user')->prefix('user')->group(function () {
     Route::get('profile/page',[RedirectController::class, 'profilePage'])->name('profilePage');
     Route::get('order/history/page',[RedirectController::class, 'orderHistoryPage'])->name('orderHistoryPage');
     Route::get('rating/history/page',[RedirectController::class, 'ratingHistoryPage'])->name('ratingHistoryPage');
-    Route::get('contact/history/page',[RedirectController::class, 'contactHistoryPage'])->name('contactHistoryPage');
     Route::get('order/history/details/{order_code}', [RedirectController::class, 'orderHistoryDetails'])->name('orderHistoryDetails');
+    Route::get('profile/page', [RedirectController::class, 'userProfilePage'])->name('userProfilePage');
+
     //create
     Route::get('/add/to/cart/{id}', [CreateController::class, 'addToCart'])->name('addToCart');
     Route::post('/place-order', [CreateController::class, 'placeOrder'])->name('placeOrder');
@@ -33,6 +34,7 @@ Route::middleware('user')->prefix('user')->group(function () {
     Route::post('product/rate', [CreateController::class, 'productRate'])->name('productRate');
 
     Route::post('/cart/update', [UpdateController::class, 'update'])->name('cart.update');
+    Route::post('/profile/update', [UpdateController::class, 'userUpdateProfile'])->name('userUpdateProfile');
 
     Route::get('/cart/delete/{id}', [DeleteController::class, 'delete'])->name('cart.delete');
 
