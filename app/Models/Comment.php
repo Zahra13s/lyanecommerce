@@ -8,6 +8,6 @@ class Comment extends Model
 {
     //
     protected $fillable = [
-        'blog_id', 'user_id', 'comment', 'reply'
+        'blog_id', 'user_id', 'comment'
     ];
 }

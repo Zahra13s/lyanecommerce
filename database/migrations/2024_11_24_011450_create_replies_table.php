@@ -11,13 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('reports', function (Blueprint $table) {
+        Schema::create('replies', function (Blueprint $table) {
             $table->id();
-            $table->string('user_id');
-            $table->string('subject');
-            $table->string('about');
-            $table->integer('reply')->nullable();
-            $table->integer('status')->default(0);
+            $table->integer("comment_id");
+            $table->string("reply");
+            $table->integer('admin_id');
             $table->timestamps();
         });
     }
@@ -27,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('reports');
+        Schema::dropIfExists('replies');
     }
 };

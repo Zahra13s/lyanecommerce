@@ -17,7 +17,11 @@ Route::middleware('user')->prefix('user')->group(function () {
     Route::get('/cart/page', [RedirectController::class, 'cartPage'])->name('cartPage');
     Route::get('recipe/page',[RedirectController::class, 'reciepePage'])->name('reciepePage');
     Route::get('product/details/{id}', [RedirectController::class, 'productDetailsPage'])->name('productDetailsPage');
-
+    Route::get('profile/page',[RedirectController::class, 'profilePage'])->name('profilePage');
+    Route::get('order/history/page',[RedirectController::class, 'orderHistoryPage'])->name('orderHistoryPage');
+    Route::get('rating/history/page',[RedirectController::class, 'ratingHistoryPage'])->name('ratingHistoryPage');
+    Route::get('contact/history/page',[RedirectController::class, 'contactHistoryPage'])->name('contactHistoryPage');
+    Route::get('order/history/details/{order_code}', [RedirectController::class, 'orderHistoryDetails'])->name('orderHistoryDetails');
     //create
     Route::get('/add/to/cart/{id}', [CreateController::class, 'addToCart'])->name('addToCart');
     Route::post('/place-order', [CreateController::class, 'placeOrder'])->name('placeOrder');
@@ -26,6 +30,7 @@ Route::middleware('user')->prefix('user')->group(function () {
     Route::post('/create/save', [CreateController::class, 'createSave'])->name('createSave');
     Route::get('/shop/filter/product', [CreateController::class, 'filterProducts'])->name('filterProducts');
     Route::post('/details/product', [CreateController::class, 'addProductDetails'])->name('addProductDetails');
+    Route::post('product/rate', [CreateController::class, 'productRate'])->name('productRate');
 
     Route::post('/cart/update', [UpdateController::class, 'update'])->name('cart.update');
 

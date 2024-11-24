@@ -5,11 +5,12 @@ namespace App\Http\Controllers\User;
 use App\Models\Cart;
 use App\Models\Save;
 use App\Models\Order;
+use App\Models\Rating;
 use App\Models\Comment;
 use App\Models\Product;
 use App\Models\Category;
-use App\Models\Favourite;
 // use Illuminate\Support\Facades\Request;
+use App\Models\Favourite;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\ProductRequest;
@@ -20,41 +21,33 @@ use Illuminate\Support\Facades\Auth;
 class CreateController extends Controller
 {
     public function addProductDetails(Request $request)
-{
-    // Validate the input
-    $validated = $request->validate([
-        'width' => 'required',
-        'length' => 'required',
-        'color_id' => 'required',
-    ]);
+    {
+        $validated = $request->validate([
+            'width' => 'required',
+            'length' => 'required',
+            'color_id' => 'required',
+        ]);
 
-    // Retrieve the product from the database by its ID
-    $product = Product::findOrFail($request->product_id);
+        $product = Product::findOrFail($request->product_id);
+        $price = $product->price;
 
-    // Get the price of the product
-    $price = $product->price;
+        $cart = Cart::create([
+            'user_id' => Auth::id(),
+            'product_id' => $product->id,
+            'price' => $price,
+            'qty' => 1,
+            'sub_total' => $price,
+        ]);
 
-    // Create the cart entry
-    $cart = Cart::create([
-        'user_id' => Auth::id(),
-        'product_id' => $product->id,
-        'price' => $price,
-        'qty' => 1,
-        'sub_total' => $price,  // Assuming price * qty is the sub_total
-    ]);
+        ProductRequest::create([
+            'order_id' => $cart->id,
+            'width' => $request->width,
+            'length' => $request->length,
+            'color_id' => $request->color_id,
+        ]);
 
-    // Create the product request
-    ProductRequest::create([
-        'order_id' => $cart->id,
-        'width' => $request->width,
-        'length' => $request->length,
-        'color_id' => $request->color_id,
-    ]);
-
-    // Redirect or return the cart view
-    return back();  // Redirect to the cart page
-}
-
+        return back()->with('showRatingModal', true);;
+    }
 
     public function addToCart($productId)
     {
@@ -102,12 +95,11 @@ class CreateController extends Controller
         if ($request->hasFile('image')) {
             $image = $request->file('image');
             $imageName = time() . '_' . $image->getClientOriginalName();
-            $image->move(public_path('products'), $imageName);
-            $imagePath = 'products/' . $imageName;
+            $image->move(public_path('order_varified'), $imageName);
+            $imagePath = $imageName;
         }
 
         foreach ($cartItems as $item) {
-            // Create an order for each cart item
             $order = Order::create([
                 'user_id' => $userId,
                 'product_id' => $item->product_id,
@@ -117,24 +109,20 @@ class CreateController extends Controller
                 'order_code' => $orderCode,
             ]);
 
-            // Update the corresponding product request's order_id to the newly created order's id
             ProductRequest::where('order_id', $item->id)->update([
                 'order_id' => $order->id,
             ]);
         }
 
-        // Insert into the order_verified table
         DB::table('order_varifieds')->insert([
             'order_code' => $orderCode,
             'image' => $imagePath,
         ]);
 
-        // Delete cart items after the order has been placed
         DB::table('carts')->where('user_id', $userId)->delete();
 
         return back()->with('success', 'Order placed successfully!');
     }
-
 
     public function createComment(Request $request)
     {
@@ -151,22 +139,22 @@ class CreateController extends Controller
 
     public function createFavourite(Request $request)
     {
+        // dd($request->all());
         $userId = Auth::user()->id;
         $blogId = $request->blog_id;
+        $type = "blog";
 
-        // Check if the favorite already exists to prevent duplicates
-        $existingFavourite = Favourite::where('blog_id', $blogId)
+        $existingFavourite = Favourite::where('item_id', $blogId)
             ->where('user_id', $userId)
             ->first();
 
         if (!$existingFavourite) {
-            // create new favourite if not already in the database
             Favourite::create([
-                'blog_id' => $blogId,
+                'item_id' => $blogId,
                 'user_id' => $userId,
+                'type' => 0
             ]);
         }
-
         return back();
     }
 
@@ -175,12 +163,12 @@ class CreateController extends Controller
         $userId = Auth::user()->id;
         $blogId = $request->blog_id;
 
-        $existingFavourite = Save::where('blog_id', $blogId)
+        $existingSave = Save::where('blog_id', $blogId)
             ->where('user_id', $userId)
             ->first();
 
         if (!$existingSave) {
-            Favourite::create([
+            Save::create([
                 'blog_id' => $blogId,
                 'user_id' => $userId,
             ]);
@@ -202,5 +190,33 @@ class CreateController extends Controller
 
         return view('user.shop', compact('categories', 'products'));
     }
+
+    public function productRate(Request $request) {
+        $request->validate([
+            'product_id' => 'required|exists:products,id',
+            'rating' => 'required|integer|min:1|max:5',
+        ]);
+
+        $userId = auth()->id();
+
+        $existingRating = Rating::where('product_id', $request->product_id)
+                                ->where('user_id', $userId)
+                                ->first();
+
+        if ($existingRating) {
+            $existingRating->update([
+                'rating' => $request->rating,
+            ]);
+        } else {
+            Rating::create([
+                'product_id' => $request->product_id,
+                'user_id' => $userId,
+                'rating' => $request->rating,
+            ]);
+        }
+
+        return back()->with('success', 'Rating submitted successfully!');
+    }
+
 
 }

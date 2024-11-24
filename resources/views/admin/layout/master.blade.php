@@ -119,14 +119,6 @@
                         </a>
                     </li>
 
-                    <li class="sidebar-item {{ request()->routeIs('blogsPage') ? 'active' : '' }}">
-                        <a class="sidebar-link" href="{{ route('blogsPage') }}">
-                            <i class="align-middle" data-feather="flag"></i> <span class="align-middle">
-                                Return Orders
-                            </span>
-                        </a>
-                    </li>
-
                     <li class="sidebar-header">
                         Blogs Management
                     </li>
@@ -137,8 +129,8 @@
                         </a>
                     </li>
 
-                    <li class="sidebar-item {{ request()->routeIs('blogsPage') ? 'active' : '' }}">
-                        <a class="sidebar-link" href="{{ route('blogsPage') }}">
+                    <li class="sidebar-item {{ request()->routeIs('blogComment') ? 'active' : '' }}">
+                        <a class="sidebar-link" href="{{ route('blogComment') }}">
                             <i class="align-middle" data-feather="message-circle"></i> <span
                                 class="align-middle">Comment Reply</span>
                         </a>

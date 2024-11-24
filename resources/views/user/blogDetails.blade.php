@@ -2,7 +2,7 @@
 
 @section('main')
     <style>
-        <style>#imageContainer {
+        #imageContainer {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             /* Three equal columns */
@@ -49,8 +49,6 @@
             /* Optional styling */
         }
     </style>
-
-    </style>
     <!-- Start Hero Section -->
     <div class="hero">
         <div class="container">
@@ -89,9 +87,20 @@
                             {{ $blog->updated_at->format('F d, Y (D)') }}
                         </div>
                         <div class="col-6 text-end my-2">
-                            <i data-feather="heart" class="me-2"></i>
-                            <i data-feather="save" class="me-2"></i>
-                            <i data-feather="share-2"></i>
+                            <form action="{{ route('createFavourite') }}" method="post">
+                                @csrf
+                                <input type="hidden" name="blog_id" value="{{ $blog->id }}">
+                                <button type="submit" style="background-color: transparent; border:none;">
+                                    <i data-feather="heart" class="me-2"></i>
+                                </button>
+                            </form>
+                            <form action="{{ route('createSave') }}" method="post">
+                                @csrf
+                                <input type="hidden" name="blog_id" value="{{ $blog->id }}">
+                                <button type="submit" style="background-color: transparent; border:none;">
+                                    <i data-feather="save" class="me-2"></i>
+                                </button>
+                            </form>
                         </div>
                     </div>
                     <p>{{ $blog->text }}</p>
@@ -110,28 +119,46 @@
 
                     <div class="row p-2">
                         <h5>Comments</h3>
-                        <hr>
-                        <div class="col">
-                            @foreach ($comments as $c)
-                                <div class="card mb-3 p-3">
-                                    <div class="row pb-3">
-                                        <div class="col">
-                                            <strong>{{ $c->name }}</strong>
+                            <hr>
+                            <div class="col">
+                                @foreach ($comments as $c)
+                                    <div class="card p-3 mt-3">
+                                        <div class="card p-3 me-5">
+                                            <div class="row pb-3">
+                                                <div class="col">
+                                                    <strong>{{ $c->name }}</strong>
+                                                </div>
+                                                <div class="col text-end">
+                                                    {{ $c->updated_at->format('M d, Y') }}
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col">{{ $c->comment }}</div>
+                                            </div>
                                         </div>
-                                        <div class="col text-end">
-                                            {{ $c->updated_at->format('M d, Y') }}
-                                        </div>
+                                        @if ($c->reply != null)
+                                            <div class="card mb-3 p-3 ms-5 mt-1">
+                                                <div class="row">
+                                                    <div class="col">
+                                                        <strong>{{$c->admin_name}}</strong>
+                                                    </div>
+                                                    <div class="col text-end">
+                                                        {{ $c->updated_at->format('M d, Y') }}
+                                                    </div>
+                                                </div>
+                                                <div class="row text-end">
+                                                    <p>{{ $c->reply }}</p>
+                                                </div>
+                                            </div>
+                                        @endif
                                     </div>
-                                    <div class="row">
-                                        <div class="col">{{ $c->comment }}</div>
-                                    </div>
-                                </div>
+                            </div>
                             @endforeach
-                        </div>
                     </div>
                 </div>
             </div>
         </div>
+    </div>
     </div>
     <!-- End Blog Section -->
     <script>

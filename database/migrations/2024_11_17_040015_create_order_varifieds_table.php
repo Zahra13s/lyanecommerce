@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('order_code');
             $table->string('image');
-            $table->string('checked')->nullable();
+            $table->string('checked')->default(0);
             $table->timestamps();
         });
     }

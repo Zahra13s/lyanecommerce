@@ -5,7 +5,7 @@
         <div class="row">
             <div class="col-6 offset-6 d-flex justify-content-center" >
                 <div class="pe-3">
-                    <input type="text" id="searchProduct" class="form-control" placeholder="Search Category by Name"
+                    <input type="text" id="searchProduct" class="form-control" placeholder="Search Color by Name"
                         onkeyup="searchProduct()">
                 </div>
 

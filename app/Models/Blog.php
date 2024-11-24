@@ -8,6 +8,6 @@ class Blog extends Model
 {
     //
     protected $fillable = [
-        'image', 'title', 'author_name', 'text', 'react', 'comment', 'share'
+        'image', 'title', 'author_name', 'text', 'react', 'comment'
     ];
 }

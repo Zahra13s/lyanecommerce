@@ -24,25 +24,27 @@
             <div class="row">
                 <div class="col-12 col-md-4 col-lg-2 mb-5">
                     <h3>Filter By Category</h3>
-                    <ul>
-                        <li>
-                            <a href="{{ route('shopPage') }}" class="{{ request('category') == null ? 'active' : '' }}">All</a>
+                    <ul class="m-0 p-0">
+                        <li class="card my-2 p-2">
+                            <a style="text-decoration: none" href="{{ route('shopPage') }}" class="{{ request('category') == null ? 'active' : '' }}"><strong>All</strong></a>
                         </li>
                         @foreach ($categories as $c)
-                            <li>
-                                <a href="{{ route('shopPage', ['category' => $c->id]) }}"
+                            <li class="card my-2 p-2">
+                                <a style="text-decoration: none" href="{{ route('shopPage', ['category' => $c->id]) }}"
                                    class="{{ request('category') == $c->id ? 'active' : '' }}">
-                                    {{ $c->category }}
+                                    <strong>
+                                        {{ $c->category }}
+                                    </strong>
                                 </a>
                             </li>
                         @endforeach
                     </ul>
                 </div>
 
-                <div class="col-12 col-md-8 col-lg-10 mb-5">
+                <div class="col-12 col-md-8 col-lg-10">
                     <div class="row p-5">
                         @foreach ($products as $p)
-                            <div class="col-12 col-md-4 col-lg-3">
+                            <div class="col-12 col-md-4 col-lg-3 mb-5">
                                 <a class="product-item" href="{{ route('productDetailsPage', $p->id) }}">
                                     <img src="{{ asset('products/' . $p->image) }}"
                                          style="width: 200px; height: 200px; object-fit: cover;" class="img-fluid product-thumbnail">
@@ -56,6 +58,10 @@
                         @endforeach
                     </div>
                 </div>
+                   <!-- Pagination Links -->
+       <div class="d-flex justify-content-end">
+        {{ $products->links('pagination::bootstrap-5') }}
+    </div>
             </div>
         </div>
     </div>

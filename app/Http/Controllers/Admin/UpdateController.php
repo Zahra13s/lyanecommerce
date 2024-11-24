@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Models\Blog;
 use App\Models\User;
 use App\Models\color;
 use App\Models\Price;
 use App\Models\Product;
 use App\Models\Category;
 use Illuminate\Http\Request;
+use App\Models\OrderVarified;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 
@@ -18,7 +20,7 @@ class UpdateController extends Controller
     {
         $request->validate([
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'phone_no' => 'nullable|string|max:15',
+            'phone' => 'nullable|string|max:15',
             'address' => 'nullable|string|max:255',
         ]);
 
@@ -39,17 +41,10 @@ class UpdateController extends Controller
             $user->image = $filename;
         }
 
-        // Debug phone_no and address before saving
-        logger('Phone No: ' . $request->phone_no);
-        logger('Address: ' . $request->address);
-
-        $user->phone_no = $request->phone_no;
+        $user->phone_no = $request->phone;
         $user->address = $request->address;
 
         $user->save();
-
-        logger('User updated: ', $user->toArray());
-
         return back()->with('success', 'Profile updated successfully!');
     }
 
@@ -122,5 +117,44 @@ class UpdateController extends Controller
 
         return back();
     }
+
+    public function update(Request $request, $id)
+    {
+        $blog = Blog::findOrFail($id); // Find the blog by ID
+
+        // Update basic fields
+        $blog->title = $request->input('title');
+        $blog->text = $request->input('text');
+
+        // Handle image upload if new images are uploaded
+        if ($request->hasFile('images')) {
+            $images = [];
+            foreach ($request->file('images') as $image) {
+                $imageName = time() . '_' . $image->getClientOriginalName();
+                $image->move(public_path('blogs'), $imageName);
+                $images[] = $imageName;
+            }
+
+            $blog->image = json_encode($images);
+        }
+
+        $blog->save(); // Save updated blog
+
+        return redirect()->back()->with('success', 'Blog updated successfully.');
+    }
+
+    public function checkOrders($order_code)
+    {
+        $orderSearch = OrderVarified::where('order_code', $order_code)->first();
+
+        if ($orderSearch) {
+            $orderSearch->update(['checked' => 1]); // Correct way to update
+        } else {
+            return redirect()->back()->with('error', 'Order not found');
+        }
+
+        return back()->with('success', 'Order status updated');
+    }
+
 
 }

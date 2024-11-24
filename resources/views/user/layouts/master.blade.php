@@ -73,18 +73,18 @@
                             data-bs-toggle="dropdown">
                             <img src="{{ asset('admin/img/avatars/avatar.jpg') }}"
                                 class="avatar img-fluid rounded me-1" style="width: 30px" alt="Charles Hall" /> <span
-                                class="text-white">{{auth()->user()->name}}</span>
+                                class="text-white">{{ auth()->user()->name }}</span>
                         </a>
                         <div class="dropdown-menu dropdown-menu-end">
-                            <a class="dropdown-item" href="pages-profile.html"><i class="align-middle me-1"
+                            <a class="dropdown-item" href="{{route('profilePage')}}"><i class="align-middle me-1"
                                     data-feather="user"></i> Profile</a>
-                            <a class="dropdown-item" href="#"><i class="align-middle me-1"
-                                    data-feather="pie-chart"></i> Analytics</a>
+                            <a class="dropdown-item" href="{{route('orderHistoryPage')}}"><i class="align-middle me-1"
+                                    data-feather="package"></i> Order History</a>
                             <div class="dropdown-divider"></div>
-                            <a class="dropdown-item" href="index.html"><i class="align-middle me-1"
-                                    data-feather="settings"></i> Settings & Privacy</a>
-                            <a class="dropdown-item" href="#"><i class="align-middle me-1"
-                                    data-feather="help-circle"></i> Help Center</a>
+                            <a class="dropdown-item" href="{{route('ratingHistoryPage')}}"><i class="align-middle me-1"
+                                    data-feather="star"></i> Rating History</a>
+                            <a class="dropdown-item" href="{{route('contactHistoryPage')}}"><i class="align-middle me-1"
+                                    data-feather="phone"></i> Contact History</a>
                             <div class="dropdown-divider"></div>
                             <!-- Authentication -->
                             <div class="dropdown-item" href="index.html">

@@ -16,7 +16,6 @@ return new class extends Migration
             $table->integer('blog_id');
             $table->integer('user_id');
             $table->string('comment');
-            $table->string('reply')->nullable();
             $table->timestamps();
         });
     }

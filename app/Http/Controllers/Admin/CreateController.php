@@ -5,10 +5,12 @@ namespace App\Http\Controllers\Admin;
 use App\Models\Blog;
 use App\Models\color;
 use App\Models\Price;
+use App\Models\Reply;
 use App\Models\Product;
 use App\Models\Category;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 
 class CreateController extends Controller
 {
@@ -103,8 +105,19 @@ class CreateController extends Controller
             'title' => $validated['title'],
             'text' => $validated['text'],
             'image' => json_encode($imagePaths),
-            'author_name' => auth()->user()->name
+            'author_name' => auth()->user()->name,
         ]);
         return back()->with('success', 'Blog post created successfully!');
+    }
+
+    public function Reply(Request $request)
+    {
+
+        $reply = Reply::create([
+            "comment_id" => $request->comment_id,
+            "reply" => $request->reply,
+            "admin_id" => Auth::user()->id,
+        ]);
+        return back();
     }
 }

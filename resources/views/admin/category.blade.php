@@ -3,7 +3,7 @@
     <div class="p-3">
 
         <div class="row">
-            <div class="col-6 offset-6 d-flex justify-content-center" >
+            <div class="col-6 offset-6 d-flex justify-content-center">
                 <div class="pe-3">
                     <input type="text" id="searchProduct" class="form-control" placeholder="Search Category by Name"
                         onkeyup="searchProduct()">
@@ -77,7 +77,7 @@
                                                 @csrf
                                                 <input type="hidden" value="{{ $category->id }}" name="id">
                                                 <input type="text" name="category" placeholder="Edit Category Name"
-                                                    class="form-control" value="{{ $category->category }}">
+                                                    class="form-control">
                                         </div>
                                         <div class="modal-footer">
                                             <button type="button" class="btn btn-secondary"
@@ -93,10 +93,10 @@
                 @endforeach
             </tbody>
         </table>
-       <!-- Pagination Links -->
-       <div class="d-flex justify-content-end">
-        {{ $data->links('pagination::bootstrap-5') }}
-    </div>
+        <!-- Pagination Links -->
+        <div class="d-flex justify-content-end">
+            {{ $data->links('pagination::bootstrap-5') }}
+        </div>
     </div>
 
     <script>

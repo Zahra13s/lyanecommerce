@@ -2,13 +2,16 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
 use App\Models\Blog;
-use App\Models\Category;
-use App\Models\Price;
-use App\Models\Product;
 use App\Models\User;
+use App\Models\Price;
+use App\Models\Reply;
+use App\Models\Rating;
+use App\Models\Comment;
+use App\Models\Product;
+use App\Models\Category;
 use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
 
 class RedirectController extends Controller
 {
@@ -63,7 +66,12 @@ class RedirectController extends Controller
     }
 
     public function productRating(){
-        return view('admin.productRating');
+        $ratings = Rating::select("ratings.*", "products.name", "categories.category","users.username")
+        ->leftJoin("products","ratings.product_id","products.id")
+        ->leftJoin("categories","categories.id","products.category_id")
+        ->leftJoin("users", "users.id","ratings.user_id")
+        ->get();
+        return view('admin.productRating', compact('ratings'));
     }
 
     public function blogsPage()
@@ -124,8 +132,18 @@ class RedirectController extends Controller
             ->where('order_code', $order_code)
             ->first();
 
-        return view('admin.ordersDetails', compact('ov_image', 'orders'));
+            $orderCode = $order_code;
+
+        return view('admin.ordersDetails', compact('ov_image', 'orders','orderCode'));
     }
 
+    public function blogComment(){
+        $comments = Comment::select("comments.*", "blogs.title", "users.username", "replies.reply")
+        ->leftJoin("blogs", "comments.blog_id","blogs.id")
+        ->leftJoin("users", "comments.user_id", "users.id")
+        ->leftJoin("replies","replies.comment_id","comments.id")
+        ->get();
+        return view('admin.blogComment',compact('comments'));
+    }
 
 }
