@@ -119,7 +119,10 @@ class RedirectController extends Controller
 
     public function orderHistoryPage()
     {
-        $orders = OrderVarified::get();
+        $orders = OrderVarified::select("order_varifieds.order_code","orders.user_id")
+        ->Join("orders","orders.order_code","order_varifieds.order_code")
+            ->where("orders.user_id", Auth::user()->id)
+             ->get();
         return view('user.history.orderHistory', compact('orders'));
     }
 

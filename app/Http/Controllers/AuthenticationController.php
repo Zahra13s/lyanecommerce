@@ -25,6 +25,7 @@ class AuthenticationController extends Controller
                     ->mixedCase()
                     ->symbols(),
             ],
+            'confirmPassword' => 'required|same:password'
         ]);
 
         $user = User::create([
@@ -42,29 +43,28 @@ class AuthenticationController extends Controller
     public function signin(Request $request)
     {
         $validated = $request->validate([
-            'email' => 'required|email',
-            'password' => 'required',
+            'user_email' => 'required|email',
+            'user_password' => 'required',
         ]);
 
-        $user = User::where('email', $validated['email'])->first();
-        if ($user && Hash::check($validated['password'], $user->password)) {
-            Auth::login($user);
+        if (Auth::attempt(['email' => $validated['user_email'], 'password' => $validated['user_password']])) {
+            $request->session()->regenerate();
 
-            if (Auth::user()->role === 'user') {
+            $user = Auth::user();
+            if ($user->role === 'user') {
                 return redirect()->route('Userdashboard');
             }
 
-            if (Auth::user()->role === 'admin' || Auth::user()->role === 'superadmin') {
+            if (in_array($user->role, ['admin', 'superadmin'])) {
                 return redirect()->route('Admindashboard');
             }
-
-        } else {
-            return "something wrong";
         }
+
+        return back()->withErrors(['login' => 'Invalid email or password.']);
     }
 
-    //profile
 
+    //profile
     public function profilePage()
     {
         return view('profile');

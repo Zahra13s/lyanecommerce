@@ -52,10 +52,11 @@
             <div class="col-8">
                 <h3>{{ $product->name }}</h3>
                 <h6>{{ $product->category }}</h6>
-                <h6>Price: {{ $product->price }} </h6>
-                <small class="text-danger"><i data-feather="alert-triangle"></i> Be aware that, this price is for 1' x
-                    1' price only. The actual price will be based on the size you want.</small>
-                    <h6>Calculated Price: <span id="calculated-price">0</span> </h6>
+                <h6 class="mb-3">Price: {{ $product->price }} </h6>
+                <small class="text-danger alert alert-danger my-2">
+                    <i data-feather="alert-triangle"></i>
+                    Be aware that, this price is for 1sqft price only.</small>
+                    <h6 class="mt-3"><strong>Calculated Price:</strong> <span id="calculated-price">0</span> </h6>
                 <p>{{ $product->description }}</p>
                 <form action="{{ route('addProductDetails') }}" method="post">
                     @csrf
