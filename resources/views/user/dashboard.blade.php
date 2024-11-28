@@ -48,7 +48,7 @@
                                 style="aspect-ratio:1/1; width:250px; height:250px; object-fit:cover;"
                                 class="img-fluid product-thumbnail">
                             <h3 class="product-title">{{ $p->name }}</h3>
-                            <strong class="product-price">Ks{{ $p->price }}</strong>
+                            <strong class="product-price">{{ ($price->price  + 3500)}} ~ {{($price->price +3000+5000)  }}</strong>
 
                             <span class="icon-cross">
                                 <img src="images/cross.svg" class="img-fluid">
@@ -178,7 +178,7 @@
                             <div class="pt-3">
                                 <h3>{{$t->name}}</h3>
                                 <p>{{ Str::words($t->description, 10, '...') }} </p>
-                                <p><a href="{{ route('productDetailsPage', $p->id) }}">Read More</a></p>
+                                <p><a href="{{ route('productDetailsPage', $t->id) }}">Read More</a></p>
                             </div>
                         </div>
                     </div>

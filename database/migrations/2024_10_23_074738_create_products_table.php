@@ -17,7 +17,6 @@ return new class extends Migration
             $table->string('image');
             $table->string('category_id');
             $table->text('description');
-            $table->decimal('price', 8, 2)->nullable();
             $table->integer('sales_count')->default(0);
             $table->timestamps();
         });

@@ -98,18 +98,12 @@
 
     <script>
         function searchProduct() {
-            // Get the value of the search input field
             const searchQuery = document.getElementById('searchProduct').value.toLowerCase();
-
-            // Get all category rows in the table
             const colorRows = document.querySelectorAll('#userTableBody .user-row');
 
-            // Loop through each category row
             colorRows.forEach(row => {
-                // Get the category name from the current row (second column)
                 const colorName = row.querySelector('td:nth-child(2)').textContent.toLowerCase();
 
-                // If the category name contains the search query, display the row, otherwise hide it
                 if (colorName.includes(searchQuery)) {
                     row.style.display = '';
                 } else {

@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Auth;
 
 class UpdateController extends Controller
 {
-
+    //update profile
     public function updateProfile(Request $request)
     {
         $request->validate([
@@ -48,11 +48,12 @@ class UpdateController extends Controller
         return back()->with('success', 'Profile updated successfully!');
     }
 
+    //update admin/user role
     public function updateRole(Request $request)
     {
         $request->validate([
             'user_id' => 'required|exists:users,id',
-            'role' => 'required|in:user,admin', // Ensure valid roles
+            'role' => 'required|in:user,admin',
         ]);
 
         $user = User::find($request->user_id);
@@ -67,6 +68,7 @@ class UpdateController extends Controller
         }
     }
 
+    //update price
     public function updatePrice(Request $request)
     {
         $price = Price::find($request->id);
@@ -75,6 +77,7 @@ class UpdateController extends Controller
         return back();
     }
 
+    //update category
     public function updateCategory(Request $request)
     {
         $category = Category::find($request->id);
@@ -83,6 +86,7 @@ class UpdateController extends Controller
         return back();
     }
 
+    //update color
     public function updateColor(Request $request)
     {
         $color = color::find($request->id);
@@ -91,6 +95,7 @@ class UpdateController extends Controller
         return back();
     }
 
+    // update product
     public function updateProduct(Request $request)
     {
         $product = Product::find($request->product_id);
@@ -118,15 +123,14 @@ class UpdateController extends Controller
         return back();
     }
 
-    public function update(Request $request, $id)
+    //update blog
+    public function updateBlog(Request $request, $id)
     {
-        $blog = Blog::findOrFail($id); // Find the blog by ID
+        $blog = Blog::findOrFail($id);
 
-        // Update basic fields
         $blog->title = $request->input('title');
         $blog->text = $request->input('text');
 
-        // Handle image upload if new images are uploaded
         if ($request->hasFile('images')) {
             $images = [];
             foreach ($request->file('images') as $image) {
@@ -138,17 +142,32 @@ class UpdateController extends Controller
             $blog->image = json_encode($images);
         }
 
-        $blog->save(); // Save updated blog
+        $blog->save();
 
         return redirect()->back()->with('success', 'Blog updated successfully.');
     }
 
-    public function checkOrders($order_code)
+    //orders update
+    public function comfirmOrders($order_code)
     {
         $orderSearch = OrderVarified::where('order_code', $order_code)->first();
 
         if ($orderSearch) {
-            $orderSearch->update(['checked' => 1]); // Correct way to update
+            $orderSearch->update(['checked' => 1]);
+        } else {
+            return redirect()->back()->with('error', 'Order not found');
+        }
+
+        return back()->with('success', 'Order status updated');
+    }
+
+    //orders update
+    public function deniedOrders($order_code)
+    {
+        $orderSearch = OrderVarified::where('order_code', $order_code)->first();
+
+        if ($orderSearch) {
+            $orderSearch->update(['checked' => 2]);
         } else {
             return redirect()->back()->with('error', 'Order not found');
         }

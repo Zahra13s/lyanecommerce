@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Admin;
 
-use Carbon\Carbon;
 use App\Http\Controllers\Controller;
 use App\Models\Blog;
 use App\Models\Category;
@@ -13,21 +12,20 @@ use App\Models\Price;
 use App\Models\Product;
 use App\Models\Rating;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
 class RedirectController extends Controller
 {
 
-
+    //admin dashboard
     public function dashboard()
     {
-        // Define current and last week's date ranges
         $currentWeekStart = Carbon::now()->startOfWeek();
         $currentWeekEnd = Carbon::now()->endOfWeek();
         $lastWeekStart = Carbon::now()->subWeek()->startOfWeek();
         $lastWeekEnd = Carbon::now()->subWeek()->endOfWeek();
 
-        // Current week data
         $currentWeekSales = OrderVarified::leftJoin("orders", "orders.order_code", "order_varifieds.order_code")
             ->where("order_varifieds.checked", 1)
             ->whereBetween("orders.created_at", [$currentWeekStart, $currentWeekEnd])
@@ -71,15 +69,32 @@ class RedirectController extends Controller
         $ordersChange = $lastWeekOrders == 0 ? 0 : (($currentWeekOrders - $lastWeekOrders) / $lastWeekOrders) * 100;
         $visitorsChange = $lastWeekVisitors == 0 ? 0 : (($currentWeekVisitors - $lastWeekVisitors) / $lastWeekVisitors) * 100;
 
-    $dates = [];
-    $orderCounts = [];
-    for ($i = 6; $i >= 0; $i--) {
-        $date = Carbon::today()->subDays($i)->format('Y-m-d');
-        $dates[] = $date;
+        $dates = [];
+        $orderCounts = [];
+        for ($i = 6; $i >= 0; $i--) {
+            $date = Carbon::today()->subDays($i)->format('Y-m-d');
+            $dates[] = $date;
 
-        $orderCount = Order::whereDate('created_at', $date)->count();
-        $orderCounts[] = $orderCount;
-    }
+            $orderCount = Order::whereDate('created_at', $date)->count();
+            $orderCounts[] = $orderCount;
+        }
+
+        // dd(
+        //     $currentWeekSales,
+        //     $currentWeekEarnings,
+        //     $currentWeekOrders,
+        //     $currentWeekVisitors,
+        //     $lastWeekSales,
+        //     $lastWeekEarnings,
+        //     $lastWeekOrders,
+        //     $lastWeekVisitors,
+        //     $salesChange,
+        //     $earningsChange,
+        //     $ordersChange,
+        //     $visitorsChange,
+        //     $dates,
+        //     $orderCounts
+        // );
 
         return view('admin.dashboard', compact(
             'currentWeekSales',
@@ -95,19 +110,21 @@ class RedirectController extends Controller
         ));
     }
 
-
+    //add admin page
     public function addAdminsPage()
     {
         $user = User::paginate(10);
         return view('admin.addadmins', compact('user'));
     }
 
+    //price page
     public function pricePage()
     {
         $data = Price::paginate(10);
         return view('admin.price', compact('data'));
     }
 
+    //category page
     public function categoriesPage()
     {
         $data = DB::table('categories')->paginate(10);
@@ -125,12 +142,14 @@ class RedirectController extends Controller
         return view('admin.category', compact('data', 'categoryProductCounts'));
     }
 
+    // colors page
     public function colorsPage()
     {
         $data = DB::table('colors')->paginate(15);
         return view('admin.color', compact('data'));
     }
 
+    // products page
     public function productsPage()
     {
         $data = Category::get();
@@ -139,6 +158,7 @@ class RedirectController extends Controller
         return view('admin.product', compact('data', 'product'));
     }
 
+    //product rate
     public function productRating()
     {
         $ratings = Rating::select("ratings.*", "products.name", "categories.category", "users.username")
@@ -149,41 +169,46 @@ class RedirectController extends Controller
         return view('admin.productRating', compact('ratings'));
     }
 
+    //blogs page
     public function blogsPage()
     {
         $blogs = Blog::all();
         return view('admin.blogs', compact('blogs'));
     }
 
+    //profile page
     public function profilePage()
     {
         return view('admin.profile');
     }
 
+    //orders list
     public function ordersReply()
     {
         $orderDisplay = DB::table('order_varifieds')
-            ->select('order_varifieds.id', 'order_varifieds.order_code', 'users.username')
+            ->select('order_varifieds.id', 'order_varifieds.order_code', 'users.username', "order_varifieds.checked")
             ->join('orders', 'order_varifieds.order_code', 'orders.order_code')
             ->join('users', 'orders.user_id', 'users.id')
-            ->groupBy('order_varifieds.id', 'order_varifieds.order_code', 'users.username')
+            ->groupBy('order_varifieds.id', 'order_varifieds.order_code', 'users.username', "order_varifieds.checked")
             ->get();
 
         return view('admin.ordersReply', compact('orderDisplay'));
     }
 
+    //order details
     public function orderDetails($order_code)
     {
         $orders = DB::table('orders')
             ->select(
+                'orders.id as order_id',
                 'orders.order_code',
                 'users.username',
                 'users.email',
                 'products.name as product_name',
                 'products.image as product_image',
-                'products.price as product_price',
                 'products.description as product_description',
                 'orders.qty',
+                'orders.price as order_price',
                 'orders.sub_total',
                 'orders.price as order_price',
                 'order_varifieds.image as order_image',
@@ -211,6 +236,7 @@ class RedirectController extends Controller
         return view('admin.ordersDetails', compact('ov_image', 'orders', 'orderCode'));
     }
 
+    //blogs comment
     public function blogComment()
     {
         $comments = Comment::select("comments.*", "blogs.title", "users.username", "replies.reply")

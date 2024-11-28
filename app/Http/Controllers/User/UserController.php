@@ -17,14 +17,5 @@ use Illuminate\Support\Str;
 
 class UserController extends Controller
 {
-    //read
-
-
-
-    //update
-
-
-
-
 
 }

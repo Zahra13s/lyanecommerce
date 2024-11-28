@@ -31,11 +31,11 @@
                     </tr>
                 </thead>
                 <tbody id="userTableBody">
-                    <?php $i = 0; ?>
+
                     @foreach ($user as $u)
                         @if ($u->id != auth()->user()->id)
                             <tr class="user-row" data-role="{{ $u->role }}">
-                                <th scope="row">{{ ++$i }}</th>
+                                <th scope="row"></th>
                                 <td>{{ $u->name }}</td>
                                 <td>{{ $u->email }}</td>
                                 <td>{{ $u->role }}</td>
@@ -58,9 +58,8 @@
         </main>
     </div>
 
-    <!-- Ensure jQuery is properly loaded -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         $(document).ready(function() {
             $('.changeRoleButton').on('click', function() {

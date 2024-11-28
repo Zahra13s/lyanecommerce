@@ -22,8 +22,7 @@
                             @csrf
                             <div class="d-flex flex-column align-items-center">
                                 <h6>Choose Images</h6>
-                                <!-- Make sure this default image exists or replace it -->
-                                <img src="{{ asset('default/product_default.jpg') }}" class="img-thumbnail w-50 sample"
+                                <img src="{{ asset('deafult/product_default.jpg') }}" class="img-thumbnail w-50 sample"
                                     id="sample" alt="Default Image" style="display: block;">
                                 <div class="d-flex flex-wrap justify-content-center" id="imagePreviewContainer"></div>
                             </div>
@@ -78,7 +77,7 @@
 
                                                     <div class="d-flex flex-column align-items-center">
                                                         <h6>Choose Images</h6>
-                                                        <img src="{{ asset('default/product_default.jpg') }}" class="img-thumbnail w-50 sample" id="sample-{{ $b->id }}" alt="">
+                                                        <img src="{{ asset('deafult/product_default.jpg') }}" class="img-thumbnail w-50 sample" id="sample-{{ $b->id }}" alt="">
                                                         <div class="d-flex flex-wrap justify-content-center" id="imagePreviewContainer-{{ $b->id }}"></div>
                                                     </div>
 
@@ -128,7 +127,6 @@
     </div>
 
     <script>
-        // Initialize Image Previews for Each Blog
         document.addEventListener("DOMContentLoaded", () => {
             const blogs = @json($blogs);
             blogs.forEach(blog => {
@@ -149,20 +147,17 @@
             });
         });
 
-        // Function to Load Files (for both adding and editing images)
         function loadFiles(event, modalId = '') {
             const imagePreviewContainer = document.querySelector(`#imagePreviewContainer-${modalId}`) || document.querySelector("#imagePreviewContainer");
             const files = event.target.files;
 
             if (modalId) {
-                document.querySelector(`#sample-${modalId}`).style.display = 'none'; // Hide sample image for edit modal
+                document.querySelector(`#sample-${modalId}`).style.display = 'none';
             } else {
-                document.querySelector("#sample").style.display = 'none'; // Hide sample image for add modal
+                document.querySelector("#sample").style.display = 'none';
             }
 
-            // Ensure the container exists before appending
             if (imagePreviewContainer) {
-                // Loop through each selected file
                 for (let i = 0; i < files.length; i++) {
                     const file = files[i];
                     const reader = new FileReader();
@@ -170,18 +165,17 @@
                     reader.onload = function(e) {
                         const imgElement = document.createElement('img');
                         imgElement.src = e.target.result;
-                        imgElement.className = 'img-thumbnail w-25 m-2'; // Adjust size and margin as needed
+                        imgElement.className = 'img-thumbnail w-25 m-2';
                         imagePreviewContainer.appendChild(imgElement);
                     };
 
-                    reader.readAsDataURL(file); // Read the file as a data URL
+                    reader.readAsDataURL(file);
                 }
             } else {
                 console.error('Image preview container not found!');
             }
         }
 
-        // Function to Add More Image Inputs Dynamically
         function addMoreInputs(modalId = '') {
             const inputFileContainer = document.querySelector(`#inputFileContainer-${modalId}`) || document.querySelector("#inputFileContainer");
             const newInput = document.createElement('input');

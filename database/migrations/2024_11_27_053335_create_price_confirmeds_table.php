@@ -11,11 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('order_varifieds', function (Blueprint $table) {
+        Schema::create('price_confirmeds', function (Blueprint $table) {
             $table->id();
-            $table->string('order_code');
-            $table->string('image');
-            $table->integer('checked')->default(0);
+            $table->integer("order_id");
+            $table->bigInteger("price");
             $table->timestamps();
         });
     }
@@ -25,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('order_varifieds');
+        Schema::dropIfExists('price_confirmeds');
     }
 };

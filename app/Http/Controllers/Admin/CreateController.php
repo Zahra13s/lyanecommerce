@@ -9,6 +9,7 @@ use App\Models\Reply;
 use App\Models\Product;
 use App\Models\Category;
 use Illuminate\Http\Request;
+use App\Models\PriceConfirmed;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 
@@ -24,7 +25,7 @@ class CreateController extends Controller
         $data = Price::create([
             'price' => $request->price,
         ]);
-        return back();
+        return back()->with('success', 'Your price has been submitted successfully!');
     }
 
     //category create
@@ -37,7 +38,7 @@ class CreateController extends Controller
         $data = Category::create([
             'category' => $request->category,
         ]);
-        return back();
+        return back()->with('success', 'Your category has been submitted successfully!');
     }
 
     //colors create
@@ -50,14 +51,12 @@ class CreateController extends Controller
         $data = color::create([
             'color' => $request->color,
         ]);
-        return back();
+        return back()->with('success', 'Your color has been submitted successfully!');
     }
 
     //product create
     public function addProduct(Request $request)
     {
-        $price = Price::latest()->first();
-
         $validated = $request->validate([
             'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
             'name' => 'required|string|max:255',
@@ -75,11 +74,10 @@ class CreateController extends Controller
             'name' => $validated['name'],
             'category_id' => $validated['category'],
             'image' => $imagePath,
-            'price' => $price->price,
             'description' => $validated['description'],
         ]);
 
-        return back();
+        return back()->with('success', 'Your product has been submitted successfully!');
     }
 
     //blog create
@@ -110,6 +108,7 @@ class CreateController extends Controller
         return back()->with('success', 'Blog post created successfully!');
     }
 
+    // reply to blogs comment
     public function Reply(Request $request)
     {
 
@@ -118,6 +117,16 @@ class CreateController extends Controller
             "reply" => $request->reply,
             "admin_id" => Auth::user()->id,
         ]);
-        return back();
+        return back()->with('success', 'Your blog has been submitted successfully!');
+    }
+
+    //price confirm
+    public function priceConfirmed(Request $request){
+        $validated = $request->validate([
+            'price' => 'required'
+        ]);
+
+        PriceConfirmed::create(['order_id' => $request->order_id ,'price' => $request->price]);
+        return back()->with('success', 'Your price confirmed has been submitted successfully!');
     }
 }

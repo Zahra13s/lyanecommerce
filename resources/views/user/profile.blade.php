@@ -119,7 +119,7 @@
                         <div class="col-12 col-sm-6 col-md-4 col-lg-6 mb-4 mb-md-0 mt-3">
                             <div class="post-entry card p-3 rounded-3">
                                 <a href="#" class="post-thumbnail">
-                                    <!-- Unique ID for each image container -->
+
                                     <div class="d-flex flex-wrap" id="imageContainer-{{ $b->id }}"></div>
 
                                     <script>

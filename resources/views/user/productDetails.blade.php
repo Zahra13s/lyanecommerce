@@ -8,7 +8,6 @@
 
     .star-rating input[type="radio"] {
         display: none;
-        /* Hide radio buttons */
     }
 
     .star-rating label {
@@ -20,7 +19,7 @@
     }
 
     .star-rating label.selected {
-        color: #FFD700; /* Gold color for selected stars */
+        color: #FFD700;
     }
 </style>
 
@@ -52,7 +51,7 @@
             <div class="col-8">
                 <h3>{{ $product->name }}</h3>
                 <h6>{{ $product->category }}</h6>
-                <h6 class="mb-3">Price: {{ $product->price }} </h6>
+                <h6 class="mb-3">Price: {{ ($price->price  + 3500)}} ~ {{($price->price +3000+5000)  }} </h6>
                 <small class="text-danger alert alert-danger my-2">
                     <i data-feather="alert-triangle"></i>
                     Be aware that, this price is for 1sqft price only.</small>
@@ -78,7 +77,7 @@
                 </form>
                 <script>
                     document.addEventListener('DOMContentLoaded', () => {
-                        const pricePerSqFt = {{ $product->price }};
+                        const pricePerSqFt = {{ $price->price }};
                         const minadditionalCostPerSqFt = 3500;
                         const maxadditionalCostPerSqFt = 5000;
                         const calculatedPriceElement = document.getElementById('calculated-price');
@@ -88,9 +87,11 @@
                         function calculatePrice() {
                             const width = parseFloat(widthInput.value) || 0;
                             const length = parseFloat(lengthInput.value) || 0;
-                            const sqFeet = (width * length) / 144; // Area in square feet
+                            const sqFeet = (width * length) / 144;
                             const minPrice = sqFeet > 0 ? (sqFeet * pricePerSqFt) + (sqFeet * minadditionalCostPerSqFt) : 0;
-                            const maxPrice = sqFeet > 0 ? (sqFeet * pricePerSqFt) + (sqFeet * maxadditionalCostPerSqFt) : 0;
+                            const maxPrice = sqFeet > 0 ? (sqFeet * (pricePerSqFt + 3000)) + (sqFeet * maxadditionalCostPerSqFt) : 0;
+                            console.log(minPrice);
+                            console.log(maxPrice);
                             calculatedPriceElement.textContent = `${minPrice.toFixed(2)} ~ ${maxPrice.toFixed(2) }` ;
                         }
 
@@ -142,15 +143,14 @@
 </div>
 
 <script>
-    // JavaScript to handle the star rating selection and color the stars
     const stars = document.querySelectorAll('.star-rating input');
     const labels = document.querySelectorAll('.star-rating label');
 
     stars.forEach((star, index) => {
         star.addEventListener('change', () => {
-            // Reset all labels
+
             labels.forEach(label => label.classList.remove('selected'));
-            // Color the selected stars
+
             for (let i = 0; i <= index; i++) {
                 labels[i].classList.add('selected');
             }

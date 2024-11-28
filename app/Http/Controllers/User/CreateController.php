@@ -22,6 +22,7 @@ use Illuminate\Support\Facades\Mail;
 
 class CreateController extends Controller
 {
+    //adding product details & cart
     public function addProductDetails(Request $request)
     {
         $validated = $request->validate([
@@ -52,34 +53,10 @@ class CreateController extends Controller
             'color_id' => $request->color_id,
         ]);
 
-        return back()->with('showRatingModal', true);
+        return redirect()->route('shopPage')->with('success', 'Product added to cart successfully!');
     }
 
-    public function addToCart($productId)
-    {
-        $product = Product::findOrFail($productId);
-
-        $existingCartItem = Cart::where('user_id', Auth::id())
-            ->where('product_id', $productId)
-            ->first();
-
-        if ($existingCartItem) {
-            $existingCartItem->qty += 1;
-            $existingCartItem->sub_total = $existingCartItem->qty * $product->price;
-            $existingCartItem->save();
-        } else {
-            Cart::create([
-                'user_id' => Auth::id(),
-                'product_id' => $productId,
-                'price' => $product->price,
-                'qty' => 1,
-                'sub_total' => $product->price,
-            ]);
-        }
-
-        return back()->with('success', 'Product added to cart successfully!');
-    }
-
+    //place order
     public function placeOrder(Request $request)
     {
         $request->validate([
@@ -129,6 +106,7 @@ class CreateController extends Controller
         return back()->with('success', 'Order placed successfully!');
     }
 
+    //blogs comment by user
     public function createComment(Request $request)
     {
         $validated = $request->validate([
@@ -142,6 +120,7 @@ class CreateController extends Controller
         return back();
     }
 
+    //create blog favourite
     public function createFavourite(Request $request)
     {
         $userId = Auth::user()->id;
@@ -157,9 +136,10 @@ class CreateController extends Controller
                 'user_id' => $userId,
             ]);
         }
-        return back();
+        return back()->with('success', 'Blog added to favourite successfully!');
     }
 
+    //create blog save
     public function createSave(Request $request)
     {
         $userId = Auth::user()->id;
@@ -176,9 +156,10 @@ class CreateController extends Controller
             ]);
         }
 
-        return back();
+        return back()->with('success', 'Product added to save successfully!');
     }
 
+    //filter the product
     public function filterProducts(Request $request)
     {
         $categories = Category::all();
@@ -193,6 +174,7 @@ class CreateController extends Controller
         return view('user.shop', compact('categories', 'products'));
     }
 
+    //product rate
     public function productRate(Request $request)
     {
         $request->validate([
@@ -221,6 +203,7 @@ class CreateController extends Controller
         return back()->with('success', 'Rating submitted successfully!');
     }
 
+    //contact via mailtrap
     public function sendContactForm(Request $request)
     {
         $validated = $request->validate([
@@ -252,11 +235,13 @@ class CreateController extends Controller
         }
     }
 
+    //checking is online to send mail
     public function isOnline($site = "https://youtube.com/")
     {
         return @fopen($site, "r") ? true : false;
     }
 
+    //update sales count
     public function updateProductSalesCount()
     {
 

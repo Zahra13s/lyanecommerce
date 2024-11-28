@@ -5,14 +5,11 @@
         #imageContainer {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            /* Three equal columns */
             gap: 15px;
-            /* Space between grid items */
         }
 
         #imageContainer img:first-child {
             grid-column: span 3;
-            /* First image spans all three columns */
             width: 100%;
             height: auto;
             object-fit: cover;
@@ -20,33 +17,24 @@
 
         #imageContainer .small-image {
             grid-column: auto;
-            /* Default placement for smaller images */
             width: 100%;
-            /* Full width in grid cell */
             height: auto;
             object-fit: cover;
         }
 
         .shrink-row {
             grid-column: span 3;
-            /* Allow smaller images to fit in one row */
             display: flex;
-            /* Flexbox to align images horizontally */
             gap: 15px;
-            /* Space between the images */
             justify-content: space-between;
-            /* Adjust spacing */
         }
 
         .shrink-row img {
             flex: 1;
-            /* All images take equal space */
             max-width: calc(33.333% - 10px);
-            /* Shrink images for one row */
             height: auto;
             object-fit: cover;
             border-radius: 5px;
-            /* Optional styling */
         }
     </style>
     <!-- Start Hero Section -->
@@ -126,7 +114,7 @@
                                         <div class="card p-3 me-5">
                                             <div class="row pb-3">
                                                 <div class="col">
-                                                    <strong>{{ $c->name }}</strong>
+                                                    <strong>{{ $c->user_name }}</strong>
                                                 </div>
                                                 <div class="col text-end">
                                                     {{ $c->updated_at->format('M d, Y') }}
@@ -174,19 +162,18 @@
 
             if (index === 0) {
                 img.classList.add("large-image");
-                container.appendChild(img); // Append the large image
+                container.appendChild(img);
             } else {
-                // Create a separate container for the small images
                 let shrinkRow = document.querySelector(".shrink-row");
 
                 if (!shrinkRow) {
                     shrinkRow = document.createElement("div");
                     shrinkRow.classList.add("shrink-row");
-                    container.appendChild(shrinkRow); // Add shrink-row to container
+                    container.appendChild(shrinkRow);
                 }
 
                 img.classList.add("small-image");
-                shrinkRow.appendChild(img); // Append small images to shrink-row
+                shrinkRow.appendChild(img);
             }
         });
     </script>

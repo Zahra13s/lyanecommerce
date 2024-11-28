@@ -99,20 +99,26 @@
         </div>
     </div>
 
+    {{-- @if (session('success'))
+    <script>
+        Swal.fire({
+            position: "top-end",
+            icon: "success",
+            title: "Success!",
+            text: "{{ session('success') }}",
+            showConfirmButton: false,
+            timer: 1500
+        });
+    </script>
+@endif --}}
     <script>
         function searchProduct() {
-            // Get the value of the search input field
             const searchQuery = document.getElementById('searchProduct').value.toLowerCase();
-
-            // Get all category rows in the table
             const categoryRows = document.querySelectorAll('#userTableBody .user-row');
 
-            // Loop through each category row
             categoryRows.forEach(row => {
-                // Get the category name from the current row (second column)
                 const categoryName = row.querySelector('td:nth-child(2)').textContent.toLowerCase();
 
-                // If the category name contains the search query, display the row, otherwise hide it
                 if (categoryName.includes(searchQuery)) {
                     row.style.display = '';
                 } else {

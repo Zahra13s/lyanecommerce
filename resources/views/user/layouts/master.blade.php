@@ -23,6 +23,8 @@
     <link href="{{ asset('user/css/tiny-slider.css') }}" rel="stylesheet">
     <link href="{{ asset('user/css/style.css') }}" rel="stylesheet">
     <script src="https://unpkg.com/feather-icons"></script>
+    {{-- sweet alert --}}
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <title>Furni Free Bootstrap 5 Template for Furniture and Interior Design Websites by Untree.co </title>
 </head>
 
@@ -71,8 +73,9 @@
 
                         <a class="nav-link dropdown-toggle d-none d-sm-inline-block" href="#"
                             data-bs-toggle="dropdown">
-                            <img src="{{ asset('admin/img/avatars/avatar.jpg') }}"
-                                class="avatar img-fluid rounded me-1" style="width: 30px" alt="Charles Hall" /> <span
+                            <img src="{{ asset(auth()->user()->image ? 'uploads/profile_images/' . auth()->user()->image : 'deafult/profile.svg') }}"
+                            alt="User Profile Picture" class="avatar img-fluid rounded me-1" width="25px">
+                             <span
                                 class="text-white">{{ auth()->user()->name }}</span>
                         </a>
                         <div class="dropdown-menu dropdown-menu-end">
@@ -111,36 +114,6 @@
     <!-- Start Footer Section -->
     <footer class="footer-section">
         <div class="container relative">
-
-            <div class="sofa-img">
-                <img src="{{ asset('user/images/sofa.png') }}" alt="Image" class="img-fluid">
-            </div>
-
-            <div class="row">
-                <div class="col-lg-8">
-                    <div class="subscription-form">
-                        <h3 class="d-flex align-items-center"><span class="me-1"><img
-                                    src="{{ asset('user/images/envelope-outline.svg') }}" alt="Image"
-                                    class="img-fluid"></span><span>Subscribe to Newsletter</span></h3>
-
-                        <form action="#" class="row g-3">
-                            <div class="col-auto">
-                                <input type="text" class="form-control" placeholder="Enter your name">
-                            </div>
-                            <div class="col-auto">
-                                <input type="email" class="form-control" placeholder="Enter your email">
-                            </div>
-                            <div class="col-auto">
-                                <button class="btn btn-primary">
-                                    <span class="fa fa-paper-plane"></span>
-                                </button>
-                            </div>
-                        </form>
-
-                    </div>
-                </div>
-            </div>
-
             <div class="row g-5 mb-5">
                 <div class="col-lg-4">
                     <div class="mb-4 footer-logo-wrap"><a href="#" class="footer-logo">Furni<span>.</span></a>
@@ -232,6 +205,18 @@
     <script src="{{ asset('user/js/custom.js') }}"></script>
     <script>
         feather.replace();
+
+        @if (session('success'))
+
+        Swal.fire({
+            position: "top-end",
+            icon: "success",
+            title: "Success!",
+            text: "{{ session('success') }}",
+            showConfirmButton: false,
+            timer: 1500
+        });
+@endif
     </script>
 </body>
 

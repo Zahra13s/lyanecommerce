@@ -2,46 +2,51 @@
 
 namespace App\Http\Controllers\User;
 
-use App\Http\Controllers\Controller;
 use App\Models\Blog;
 use App\Models\Cart;
-use App\Models\Category;
-use App\Models\color;
-use App\Models\Comment;
-use App\Models\Order;
-use App\Models\OrderVarified;
-use App\Models\Product;
-use App\Models\Rating;
 use App\Models\User;
+use App\Models\color;
+use App\Models\Order;
+use App\Models\Price;
+use App\Models\Rating;
+use App\Models\Comment;
+use App\Models\Product;
+use App\Models\Category;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+use App\Models\OrderVarified;
 use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 
 class RedirectController extends Controller
 {
-    //
+    //user dashboard
     public function dashboard()
     {
         $products = Product::orderBy('created_at', 'desc')->limit(3)->get();
         $blogs = Blog::orderBy('created_at', 'desc')->limit(3)->get();
         $top3Sales = Product::orderBy("sales_count", "desc")->limit(3)->get();
-        return view("user.dashboard", compact('products', 'blogs','top3Sales'));
+        $price = Price::orderBy("price","asc")->first();
+        return view("user.dashboard", compact('products', 'blogs','top3Sales','price'));
     }
 
+    //redirect shop page
     public function shopPage(Request $request)
     {
         $categories = Category::all();
         $categoryId = $request->get('category');
-
+        $top3Sales = Product::orderBy("sales_count", "desc")->limit(3)->get();
+        $price = Price::orderBy("price","asc")->first();
         if ($categoryId) {
             $products = Product::where('category_id', $categoryId)->paginate(8);
         } else {
             $products = Product::paginate(8);
         }
 
-        return view("user.shop", compact('products', 'categories'));
+        return view("user.shop", compact('products', 'categories', 'top3Sales',"price"));
     }
 
+    //about us page
     public function aboutUsPage()
     {
         $admins = User::whereIn("role", ["admin", "superadmin"])->get();
@@ -49,12 +54,14 @@ class RedirectController extends Controller
         return view("user.about", compact('admins'));
     }
 
+    //blog page
     public function blogPage()
     {
         $blogs = Blog::get();
         return view("user.blog", compact('blogs'));
     }
 
+    //blog details
     public function blogDetails($id)
     {
         $blog = Blog::find($id);
@@ -64,20 +71,22 @@ class RedirectController extends Controller
             "replies.reply",
             "admin_users.name as admin_name"
         )
-            ->leftJoin("users", "users.id", "comments.user_id") // For users who commented
+            ->leftJoin("users", "users.id", "comments.user_id")
             ->leftJoin("replies", "replies.comment_id", "comments.id")
-            ->leftJoin("users as admin_users", "admin_users.id", "replies.admin_id") // For admins replying
+            ->leftJoin("users as admin_users", "admin_users.id", "replies.admin_id")
             ->where("blog_id", $id)
             ->get();
 
         return view('user.blogDetails', compact('blog', 'comments'));
     }
 
+    //contact us page
     public function contactUsPage()
     {
         return view("user.contact");
     }
 
+    //cart page
     public function cartPage()
     {
         $cart_items = Cart::select('carts.*', 'products.name', 'products.image', "product_requests.width", "product_requests.length", "product_requests.color_id", "colors.color")
@@ -90,6 +99,7 @@ class RedirectController extends Controller
         return view("user.cart", compact("cart_items"));
     }
 
+    //reciepe page
     public function reciepePage()
     {
         $cart_items = Cart::select('carts.*', 'products.name', 'products.image')
@@ -99,33 +109,42 @@ class RedirectController extends Controller
         return view('user.reciept', compact('cart_items'));
     }
 
+    //product page
     public function productDetailsPage($id)
     {
         $product = Product::
             select('products.*', 'categories.category')
             ->leftJoin("categories", "categories.id", "products.category_id")
             ->where("products.id", $id)->first();
+            $price = Price::orderBy("price","asc")->first();
+            // dd($price);
         if (!$product) {
             return redirect()->route('shopPage')->with('error', 'Product not found.');
         }
         $colors = color::get();
-        return view('user.productDetails', compact('product', 'colors'));
+        return view('user.productDetails', compact('product', 'colors',"price"));
     }
 
+    //profile page
     public function profilePage()
     {
         return view('user.profile');
     }
 
+    //order history
     public function orderHistoryPage()
     {
-        $orders = OrderVarified::select("order_varifieds.order_code","orders.user_id")
-        ->Join("orders","orders.order_code","order_varifieds.order_code")
-            ->where("orders.user_id", Auth::user()->id)
-             ->get();
+        $orders = DB::table('order_varifieds')
+        ->select('order_varifieds.id', 'order_varifieds.order_code', "order_varifieds.checked")
+        ->join('orders', 'order_varifieds.order_code', 'orders.order_code')
+        ->join('users', 'orders.user_id', 'users.id')
+        ->where("users.id", Auth::user()->id)
+        ->groupBy('order_varifieds.id', 'order_varifieds.order_code', 'users.username', "order_varifieds.checked")
+        ->get();
         return view('user.history.orderHistory', compact('orders'));
     }
 
+    //rating page
     public function ratingHistoryPage()
     {
         $ratings = Rating::select('ratings.*', 'products.name', 'products.image', 'categories.category')
@@ -136,23 +155,27 @@ class RedirectController extends Controller
         return view('user.history.ratingHistory', compact('ratings'));
     }
 
+    // contact us page
     public function contactHistoryPage()
     {
         return view('user.history.contactHistory');
     }
 
+    //order history details
     public function orderHistoryDetails($order_code)
     {
-        $orders = Order::select("orders.*", "order_varifieds.checked", "products.name", "products.image", "categories.category")
+        $orders = Order::select("orders.*", "order_varifieds.checked", "products.name", "products.image", "categories.category", "price_confirmeds.price as actual_price")
             ->where("orders.user_id", Auth::user()->id)
             ->where('orders.order_code', $order_code)
             ->leftJoin("order_varifieds", "order_varifieds.order_code", "orders.order_code")
             ->leftJoin('products', 'orders.product_id', "products.id")
+            ->leftJoin("price_confirmeds","price_confirmeds.order_id", "orders.id")
             ->leftJoin("categories", "categories.id", "products.category_id")
             ->get();
         return view('user.history.orderHistoryDetails', compact('orders', 'order_code'));
     }
 
+    //user profile
     public function userProfilePage(Request $request)
     {
         $user = auth()->user();

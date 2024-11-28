@@ -24,11 +24,15 @@
                          <td><img src="{{asset('products/'.$o->image)}}" alt="" width="100px"></td>
                          <td>{{$o->name}}</td>
                          <td>{{$o->category}}</td>
-                         <td>{{$o->price}}</td>
+                         <td>{{$o->actual_price}}</td>
                          <td>{{$o->qty}}</td>
-                         <td>{{$o->sub_total}}</td>
+                         <td>{{$o->actual_price * $o->qty}}
+                            <br>
+
+                         </td>
                        </tr>
                         @endforeach
+                        <small class="text-warning">If the price is overpayed, I'll get that back to you with the product. If the price is need, please transfer it to be double confimed the orders.</small>
                     </tbody>
                 </table>
             </div>

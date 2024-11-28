@@ -53,9 +53,8 @@
                                         @endforeach
 
                                         @php
-                                            // Calculate the subtotal only once
                                             $subtotal = $cart_items->sum('sub_total');
-                                            $shipping_fee = 10; // Example shipping fee
+                                            $shipping_fee = 10;
                                             $total = $subtotal + $shipping_fee;
                                         @endphp
 

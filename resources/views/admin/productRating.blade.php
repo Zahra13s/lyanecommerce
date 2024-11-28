@@ -19,7 +19,10 @@
                         <td>{{ $r->name }}</td>
                         <td>{{ $r->category}}</td>
                         <td>{{ $r->username }}</td>
-                        <td>{{ $r->comment }}</td>
+                        <td>@for ($i = 1; $i <= 5; $i++)
+                            <i data-feather="star"
+                               class="{{ $i <= $r->rating ? 'text-warning' : 'text-muted' }}"></i>
+                        @endfor</td>
                     </tr>
                 @endforeach
             </tbody>

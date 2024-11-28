@@ -55,7 +55,6 @@
         <table class="table mb-5">
             <thead>
                 <tr>
-                    <th class="col">#</th>
                     <th class="col-2">Image</th>
                     <th class="col">Name</th>
                     <th class="col">Category</th>
@@ -65,10 +64,8 @@
                 </tr>
             </thead>
             <tbody id="userTableBody">
-                <?php $i = 0; ?>
                 @foreach ($product as $p)
                     <tr class="user-row">
-                        <th scope="row">{{ ++$i }}</th>
                         <td>
                             @if ($p->image)
                                 <img src="{{ asset('products/' . $p->image) }}" alt="" class="w-100 img-thumbnail">
@@ -100,14 +97,16 @@
                                         <div class="modal-body">
                                             <div class="d-flex justify-content-center">
                                                 <img src="{{ asset('products/' . $p->image) }}"
-                                                    class="img-thumbnail w-50" alt="" id="output">
+                                                    class="img-thumbnail w-50" alt="" id="output{{$p->id}}">
+
+
                                             </div>
                                             <form action="{{ route('updateProduct') }}" method="POST"
                                                 enctype="multipart/form-data">
                                                 @csrf
                                                 <input type="hidden" name="product_id" value="{{ $p->id }}">
                                                 <input type="file" name="image" class="form-control mt-3"
-                                                    onchange="loadFile(event)">
+                                                onchange="loadFile(event, {{ $p->id }})">
                                                 <input type="text" name="name" class="form-control mt-3"
                                                     value="{{ $p->name }}" placeholder="Product Name">
                                                 <select name="category" class="form-control mt-3">
@@ -138,7 +137,7 @@
                                 @method('DELETE')
                                 <!-- Delete Button with Feather Icon -->
                                 <button type="submit" class="btn btn-danger" title="Delete">
-                                    <i data-feather="trash-2"></i> <!-- Feather Icon -->
+                                    <i data-feather="trash-2"></i>
                                 </button>
                             </form>
                         </td>
@@ -155,18 +154,32 @@
     <script>
         // Function to filter products based on name
         document.getElementById('searchInput').addEventListener('input', function() {
-            let searchTerm = this.value.toLowerCase(); // Get search term
-            let tableRows = document.querySelectorAll('#userTableBody .user-row'); // Get all product rows
+            let searchTerm = this.value.toLowerCase();
+            let tableRows = document.querySelectorAll('#userTableBody .user-row');
 
             tableRows.forEach(function(row) {
                 let productName = row.querySelector('td:nth-child(3)').textContent
-                    .toLowerCase(); // Get the product name from the third column (adjust index if needed)
+                    .toLowerCase();
                 if (productName.includes(searchTerm)) {
-                    row.style.display = ''; // Show the row if it matches the search term
+                    row.style.display = '';
                 } else {
-                    row.style.display = 'none'; // Hide the row if it doesn't match
+                    row.style.display = 'none';
                 }
             });
         });
+
+
+    function loadFile(event, id) {
+        var reader = new FileReader();
+
+        reader.onload = function() {
+            var output = document.getElementById("output" + id);
+            output.src = reader.result;
+        }
+
+        reader.readAsDataURL(event.target.files[0]);
+    }
+
+
     </script>
 @endsection

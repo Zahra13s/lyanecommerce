@@ -8,7 +8,7 @@ use App\Http\Controllers\Controller;
 
 class DeleteController extends Controller
 {
-    //
+    //delete cart
     public function delete($id)
     {
         $cart = Cart::find($id);

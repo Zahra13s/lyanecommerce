@@ -4,7 +4,7 @@
         <div class="row mb-5">
             <!-- User Profile Details -->
             <div class="col-4 offset-1 p-3">
-                <img src="{{ asset(auth()->user()->image ? 'uploads/profile_images/' . auth()->user()->image : 'admin/img/avatars/avatar-2.jpg') }}"
+                <img src="{{ asset(auth()->user()->image ? 'uploads/profile_images/' . auth()->user()->image : 'deafult/profile.svg') }}"
                     width="250px" alt="User Profile Picture" class="rounded-circle">
                 <h3 class="mt-3">{{ auth()->user()->name }}</h3>
                 <h5>{{ auth()->user()->role }}</h5>
@@ -27,7 +27,6 @@
                 </ul>
             </div>
 
-            <!-- Placeholder for additional content -->
             <div class="col-6 d-flex align-items-center justify-content-center">
                                <!-- Profile Update Form -->
                                <form action="{{ route('updateProfile') }}" method="POST" enctype="multipart/form-data">

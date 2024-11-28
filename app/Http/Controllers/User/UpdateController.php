@@ -9,8 +9,7 @@ use Illuminate\Support\Facades\Auth;
 
 class UpdateController extends Controller
 {
-    //
-
+    //update cart qty
     public function update(Request $request)
     {
         foreach ($request->items as $item) {
@@ -23,6 +22,7 @@ class UpdateController extends Controller
         return back();
     }
 
+    //update user profile
     public function userUpdateProfile(Request $request)
     {
         $request->validate([

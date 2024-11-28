@@ -11,7 +11,7 @@ use Illuminate\Validation\Rules\Password;
 
 class AuthenticationController extends Controller
 {
-    //
+    //sign up
     public function signup(Request $request)
     {
         $validated = $request->validate([
@@ -40,6 +40,7 @@ class AuthenticationController extends Controller
 
     }
 
+    //sign in
     public function signin(Request $request)
     {
         $validated = $request->validate([
@@ -62,7 +63,6 @@ class AuthenticationController extends Controller
 
         return back()->withErrors(['login' => 'Invalid email or password.']);
     }
-
 
     //profile
     public function profilePage()
